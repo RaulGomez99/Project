@@ -1,0 +1,50 @@
+#login {
+  border: 1px solid black;
+  border-radius: 10px;
+  width: 20%;
+  margin: 0 auto;
+  margin-top: 20vh;
+}
+
+
+#login {
+  text-align: center;
+  padding: 20px 0% 20px 0%;
+  background-color: rgba(0,0,0,0.7);
+}
+
+input {
+  width: 80%;
+}
+#login > span {
+  background-color: white;
+  width: 200px;
+  border: 1px solid lightgray;
+  border-radius: 3px;
+}
+
+input,
+button,
+input:focus {
+  margin-top: 20px;
+  margin-left: 3px;
+  border: none;
+  outline: none;
+}
+
+button {
+  background-color: #4CAF50;
+  color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 5px #999;
+  padding: 6px 12px;
+  font-size: 15px;
+}
+
+button:hover {background-color: #3e8e41}
+
+button:active {
+    background-color: #3e8e41;
+    box-shadow: 0 2px #666;
+    transform: translateY(3px);
+  }
