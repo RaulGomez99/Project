@@ -2,7 +2,6 @@ import React, {useState, useEffect} from "react";
 import "./App.css";
 import { BrowserRouter as Router, Switch, Route, Link, Redirect } from "react-router-dom";
 import Cookies from "js-cookie";
-import Inicio from "./img/icono.png"
 import Home from "./Components/Home/home.component";
 import Login from "./Components/Login/login.component";
 import Register from "./Components/Register/register.component";
@@ -11,10 +10,13 @@ export default () => {
   const [user,setUser] = useState(null);
 
   const setUserCookie = (userReceived) => {
-    setUser(userReceived);
+    Cookies.set(userReceived.id)
+    setUser(userReceived.id);
   }
   useEffect(()=>{
-    //setUser(Cookies.get('user'));
+    let userCookie = Cookies.get('user');
+    if(!userCookie) Cookies.set('user',-1);
+    setUser(Cookies.get('user'));
   },[])
 
   return (
@@ -51,10 +53,10 @@ export default () => {
               <h1>DashBoard</h1>
             </Route>
             <Route path="/register">
-              {user ? <Redirect to="/"/> : (<Register />)}
+              {user>=0  ? <Redirect to="/"/> : (<Register />)}
             </Route>
             <Route path="/login">
-              {user ? <Redirect to="/"/> : (<Login />)}
+              {user>=0  ? <Redirect to="/"/> : (<Login logUser={setUserCookie}/>)}
             </Route>
           </Switch>
         </div>
