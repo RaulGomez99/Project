@@ -12,7 +12,7 @@ routesReact.forEach(element =>{
     app.get('/'+element, (req,res) =>{res.sendFile(path.join(__dirname+'/Frontend/build/index.html'))});
 });
 
-app.use("/api/login",require('./app/routes/login.routes'));
+app.use("/api/users",require('./app/routes/login.routes'));
 
 const port = process.env.PORT || 5000;
 app.listen(port);

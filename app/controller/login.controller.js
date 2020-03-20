@@ -1,19 +1,24 @@
-const md5 = require('md5');
 const User = require('../models/user.model');
+const auth = require('../models/auth.model');
 
 
-exports.getAll = (req,res) => {
+exports.verifyLogin = (req,res) => {
+    console.log(req.body)
     User.findAll({where:{
-        username:req.body.user,
-        password:md5(req.body.password)
+        username:req.body.user
     }}).then(resp=>{
-        console.log(resp.length)
         if(resp.length){
-            res.send(resp[0]);
+            const user = resp[0].dataValues;
+            if(auth.verifyPassword(req.body.password,user.password)){
+                const token = auth.createToken(user);
+                res.send({token});
+            }else{
+                res.send({error:"Password erroneo"});
+            }
         }else{
-            res.send({});
+            res.send({error: "Usuario no encontrado"});
         }
     }).catch(e=>{
-        res.send("");
+        res.send({error:e});
     })
 }
