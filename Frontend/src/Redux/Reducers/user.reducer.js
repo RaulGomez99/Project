@@ -1,6 +1,5 @@
 const initalState = {
-    user:null,
-    token:""
+    user:null
 }
 
 const reducer = (state = initalState, action) => {
@@ -8,10 +7,7 @@ const reducer = (state = initalState, action) => {
         case 'LOG_USER':
             return {
                 ...state,
-                user:{
-                    ...state.user,
-                    id:state.user.id+1
-                }
+                user:action.user
             }
         case 'SET_TOKEN':
             return {

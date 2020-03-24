@@ -5,28 +5,25 @@ import { UserOutlined } from '@ant-design/icons';
 import Http from "../../utils/http.utils"; 
 
 import {connect} from 'react-redux';
-import {setItem} from '../../Redux/Actions/user.action';
+import {logUser} from '../../Redux/Actions/user.action';
 
 
 // let password = "";
 // const password="a";
-const Login =  ({setItem}) => {
+const Login =  ({logUser}) => {
     const text = useRef("");
     const [password,setPassword] = useState("");
 
     const login = () => {
         const data = {
-            user:text.current.state.value,
+            username:text.current.state.value,
             password
         }
-        console.log(data,text,password)
+        console.log(data)
         Http.post(data,'/api/users/login','').then(resp=>{
-            console.log(resp)
+            console.log(resp.user)
             if(resp.error) alert(resp.error);
-            else{
-                localStorage.setItem('token',resp.token);
-                setItem({user:resp.user,token:resp.token});
-            }
+            else logUser(resp.user);
         })
         
     }
@@ -43,4 +40,4 @@ const Login =  ({setItem}) => {
     )
 }
 
-export default connect(null,{setItem})(Login);
+export default connect(null,{logUser})(Login);

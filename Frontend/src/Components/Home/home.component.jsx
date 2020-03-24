@@ -8,13 +8,12 @@ import {logOut} from '../../Redux/Actions/user.action';
 
 
 
-const Home =  ({user,token,logOut}) => { 
+const Home =  ({user,logOut}) => { 
 
     return(
-        <div>
+        <div className="home">
             {user.id}<br />
             {user.username}<br/>
-            {token}<br/>
             <button onClick={()=> {logOut()}}>Log out</button>
 
         </div>
@@ -23,8 +22,7 @@ const Home =  ({user,token,logOut}) => {
 
 const mapStateToProps =state => {
     return ({
-      user:readUser(state),
-      token:readToken(state)
+      user:readUser(state)
     })
     
   }

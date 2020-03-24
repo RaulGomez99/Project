@@ -2,6 +2,12 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const privateKey = "hasjfhasd";
 
+module.exports.optsCookie = {
+    expires: new Date(Date.now() + 360000),
+	secure: false, // set to true if your using https
+	httpOnly: true
+}
+
 module.exports.createToken = (user, headers) => {
     const tokenObject = {
         user,
@@ -30,3 +36,5 @@ module.exports.verifyPassword = (myPlaintextPassword,hash) => {
     const verified = bcrypt.compareSync(myPlaintextPassword, hash);
     return verified;
 }
+
+module.exports.privateKey = privateKey;

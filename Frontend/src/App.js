@@ -10,19 +10,14 @@ import Register from "./Components/Register/register.component";
 import Http from "./utils/http.utils"; 
 
 import {readUser} from './Redux/Reducers/user.reducer'
-import {setItem} from './Redux/Actions/user.action';
+import {logUser} from './Redux/Actions/user.action';
 
-const App = ({setItem,user}) => {
+const App = ({logUser,user}) => {
 
   useEffect(async()=>{
-    const ourToken = localStorage.getItem('token');
-    if(ourToken!==null){
-      const userResponse = await Http.get('/api/users/verifyToken',ourToken);
-      if(!userResponse.error){
-        setItem({user:userResponse.user,token:ourToken});
-      }else{
-        localStorage.clear();
-      }
+    const userResponse = await Http.get('/api/users/findUser');
+    if(userResponse.user){
+      logUser(userResponse.user);
     }
   },[])
 
@@ -33,40 +28,20 @@ const App = ({setItem,user}) => {
       <div>
         <header>
           <ul>
-            <li>
-              <Link to="/">Inicio</Link>
-            </li>
-            <li>
-              <Link to="/about">About</Link>
-            </li>
-            <li>
-              <Link to="/dashboard">Dashboard</Link>
-            </li>
-            <li className="right">
-              <Link to="/login">Log in</Link>
-            </li>
-            <li className="right">
-              <Link to="/register">Register</Link>
-            </li>
+            <li><Link to="/">Inicio</Link></li>
+            <li><Link to="/about">About</Link></li>
+            <li><Link to="/dashboard">Dashboard</Link></li>
+            <li className="right"><Link to="/login">Log in</Link></li>
+            <li className="right"><Link to="/register">Register</Link></li>
           </ul>
         </header>
         <div className="content">
           <Switch>
-            <Route exact path="/">
-              {user!==null ? <Home />:<Redirect to="/login"/>}
-            </Route>
-            <Route path="/about">
-              <h1>About</h1>
-            </Route>
-            <Route path="/dashboard">
-              <h1>DashBoard</h1>
-            </Route>
-            <Route path="/register">
-              {user!==null  ? <Redirect to="/"/> : (<Register />)}
-            </Route>
-            <Route path="/login">
-              {user!==null  ? <Redirect to="/"/> : (<Login/>)}
-            </Route>
+            <Route exact path="/">{user!==null ? <Home />:<Redirect to="/login"/>}</Route>
+            <Route path="/about"><h1>About</h1></Route>
+            <Route path="/dashboard"><h1>DashBoard</h1></Route>
+            <Route path="/register">{user!==null  ? <Redirect to="/"/> : (<Register />)}</Route>
+            <Route path="/login">{user!==null  ? <Redirect to="/"/> : (<Login/>)}</Route>
           </Switch>
         </div>
       </div>
@@ -82,4 +57,4 @@ const mapStateToProps =state => {
 }
 
 
-export default connect(mapStateToProps,{setItem})(App);
+export default connect(mapStateToProps,{logUser})(App);

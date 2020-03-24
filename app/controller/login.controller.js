@@ -1,24 +1,43 @@
 const User = require('../models/user.model');
+const passport = require('passport');
 const auth = require('../models/auth.model');
 
 
-exports.verifyLogin = (req,res) => {
-    console.log(req.body)
-    User.findAll({where:{
-        username:req.body.user
-    }}).then(resp=>{
-        if(resp.length){
-            const user = resp[0].dataValues;
-            if(auth.verifyPassword(req.body.password,user.password)){
-                const token = auth.createToken(user);
-                res.send({token,user});
-            }else{
-                res.send({error:"Password erroneo"});
-            }
+exports.verifyLogin = (req,res,next) =>  {
+    passport.authenticate('login',(err,user,info) => {
+        if(err) console.log(err)
+        if(info!==undefined){
+            console.log(info.message);
+            res.send(info)
         }else{
-            res.send({error: "Usuario no encontrado"});
+            req.logIn(user,err => {
+                User.findOne({
+                    where:{
+                        username:user.username
+                    }
+                }).then(user => {
+                    const token = auth.createToken(user,auth.privateKey);
+                    res.cookie("jwt", token, auth.optsCookie);
+                    res.status(200).send({
+                        token:token,
+                        user:user
+                    })
+                })
+            })
         }
-    }).catch(e=>{
-        res.send({error:e});
-    })
+    })(req,res,next);
+}
+
+exports.findUser = (req,res,next) => {
+    passport.authenticate('jwt',{session:false}, (err, user, info) => {
+        if(err) console.log(err);
+        if(info!==undefined){
+            res.send(info);
+        }else{
+            res.status(200).send({
+                user,
+                auth:true
+            })
+        }
+    })(req,res,next)
 }
