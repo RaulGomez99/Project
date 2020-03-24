@@ -1,29 +1,32 @@
 import React, {useState, useEffect} from "react";
-import "./App.css";
+import {connect} from 'react-redux';
 import { BrowserRouter as Router, Switch, Route, Link, Redirect } from "react-router-dom";
+import "./App.css";
+
 import Home from "./Components/Home/home.component";
 import Login from "./Components/Login/login.component";
 import Register from "./Components/Register/register.component";
+
 import Http from "./utils/http.utils"; 
 
-export default () => {
-  const [user,setUser] = useState(null);
+import {readUser} from './Redux/Reducers/user.reducer'
+import {setItem} from './Redux/Actions/user.action';
 
-  const setToken = async (token) => {
-    localStorage.setItem('token',token.token);
-    setUser(await Http.get('/api/users/verifyToken',token));
-  }
+const App = ({setItem,user}) => {
+
   useEffect(async()=>{
     const ourToken = localStorage.getItem('token');
     if(ourToken!==null){
       const userResponse = await Http.get('/api/users/verifyToken',ourToken);
       if(!userResponse.error){
-        setUser(userResponse);
+        setItem({user:userResponse.user,token:ourToken});
       }else{
         localStorage.clear();
       }
     }
   },[])
+
+
 
   return (
     <Router>
@@ -50,7 +53,7 @@ export default () => {
         <div className="content">
           <Switch>
             <Route exact path="/">
-              <Home />
+              {user!==null ? <Home />:<Redirect to="/login"/>}
             </Route>
             <Route path="/about">
               <h1>About</h1>
@@ -62,7 +65,7 @@ export default () => {
               {user!==null  ? <Redirect to="/"/> : (<Register />)}
             </Route>
             <Route path="/login">
-              {user!==null  ? <Redirect to="/"/> : (<Login setToken={setToken}/>)}
+              {user!==null  ? <Redirect to="/"/> : (<Login/>)}
             </Route>
           </Switch>
         </div>
@@ -70,3 +73,13 @@ export default () => {
     </Router>
   );
 };
+
+const mapStateToProps =state => {
+  return ({
+    user:readUser(state),
+  })
+  
+}
+
+
+export default connect(mapStateToProps,{setItem})(App);

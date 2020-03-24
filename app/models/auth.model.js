@@ -2,9 +2,12 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const privateKey = "hasjfhasd";
 
-module.exports.createToken = (user) => {
-    console.log(user);
-    const token = jwt.sign(user,privateKey,{expiresIn: 60*30})
+module.exports.createToken = (user, headers) => {
+    const tokenObject = {
+        user,
+        browserData: headers
+    }
+    const token = jwt.sign(tokenObject,privateKey,{expiresIn: 60*30})
     return token;
 }
 

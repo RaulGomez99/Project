@@ -11,7 +11,7 @@ exports.verifyLogin = (req,res) => {
             const user = resp[0].dataValues;
             if(auth.verifyPassword(req.body.password,user.password)){
                 const token = auth.createToken(user);
-                res.send({token});
+                res.send({token,user});
             }else{
                 res.send({error:"Password erroneo"});
             }
