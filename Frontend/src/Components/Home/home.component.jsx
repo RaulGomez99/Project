@@ -6,6 +6,8 @@ import {connect} from 'react-redux';
 import {readUser, readToken} from '../../Redux/Reducers/user.reducer'
 import {logOut} from '../../Redux/Actions/user.action';
 
+import Http from '../../utils/http.utils';
+
 
 
 const Home =  ({user,logOut}) => { 
@@ -14,7 +16,10 @@ const Home =  ({user,logOut}) => {
         <div className="home">
             {user.id}<br />
             {user.username}<br/>
-            <button onClick={()=> {logOut()}}>Log out</button>
+            <button onClick={()=> {
+                Http.get('/api/users/logout');
+                logOut();
+            }}>Log out</button>
 
         </div>
     )

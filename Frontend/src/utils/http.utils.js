@@ -13,8 +13,7 @@ export default class Http {
         return request;
     }
 
-    static post = async (body, url, token) => {
-        console.log(token);
+    static post = async (body, url) => {
         const request = this.postRequest(body, url, 'POST');
         const res = await fetch(request);
         const data = res.json();

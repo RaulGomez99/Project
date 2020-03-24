@@ -16,6 +16,7 @@ const App = ({logUser,user}) => {
 
   useEffect(async()=>{
     const userResponse = await Http.get('/api/users/findUser');
+    console.log(userResponse);
     if(userResponse.user){
       logUser(userResponse.user);
     }

@@ -2,6 +2,10 @@ const User = require('../models/user.model');
 const passport = require('passport');
 const auth = require('../models/auth.model');
 
+exports.logOut = (req,res) => {
+    res.clearCookie('jwt');
+    res.send('Cookie eliminada');
+}
 
 exports.verifyLogin = (req,res,next) =>  {
     passport.authenticate('login',(err,user,info) => {
@@ -17,7 +21,7 @@ exports.verifyLogin = (req,res,next) =>  {
                     }
                 }).then(user => {
                     const token = auth.createToken(user,auth.privateKey);
-                    res.cookie("jwt", token, auth.optsCookie);
+                    res.cookie('jwt', token, auth.optsCookie);
                     res.status(200).send({
                         token:token,
                         user:user
