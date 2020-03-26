@@ -1,18 +1,14 @@
-const Sequelize= require("sequelize");
-const sequelize = new Sequelize('project', 'root', '', {
-    host: 'localhost',
-    dialect: 'mysql'
-});
-
-module.exports = sequelize.define('user', {
-    id:{
-        type:Sequelize.INTEGER,
-        primaryKey:true
-    },
-    username:{
-        type:Sequelize.STRING
-    },
-    password:{
-        type:Sequelize.STRING
+module.exports = (sequelize, Datatypes) => {
+    const User = sequelize.define('user',{
+        id:{
+            type:Datatypes.INTEGER,
+            primaryKey:true
+        },
+        username:Datatypes.STRING,
+        password:Datatypes.STRING
+    },{freezeTableName:true,timestamps:false});
+    User.associate = models => {
+        User.hasMany(models.UserDetail,{foreignKey:'id_user'});
     }
-},{timestamps:false,freezeTableName:true})
+    return User;
+}

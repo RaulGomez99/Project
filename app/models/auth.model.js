@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const privateKey = "hasjfhasd";
 
 module.exports.optsCookie = {
-    expires: new Date(Date.now() + 360000),
+    expires: new Date(Date.now() + 36000000),
 	secure: false, // set to true if your using https
 	httpOnly: true
 }

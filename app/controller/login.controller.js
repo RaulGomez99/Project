@@ -1,4 +1,4 @@
-const User = require('../models/user.model');
+const {User,UserDetail} = require('../models/db.model');
 const passport = require('passport');
 const auth = require('../models/auth.model');
 
@@ -18,7 +18,10 @@ exports.verifyLogin = (req,res,next) =>  {
                 User.findOne({
                     where:{
                         username:user.username
-                    }
+                    },
+                    include: [
+                        {model: UserDetail}
+                    ]
                 }).then(user => {
                     const token = auth.createToken(user,auth.privateKey);
                     res.cookie('jwt', token, auth.optsCookie);
