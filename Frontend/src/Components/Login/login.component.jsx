@@ -17,18 +17,16 @@ const Login =  ({logUser}) => {
             username:text.current.state.value,
             password
         }
-        console.log(data)
         Http.post(data,'/api/users/login').then(resp=>{
             console.log(resp.user)
             if(resp.error) alert(resp.error);
             else logUser(resp.user);
-        })
-        
+        }) 
     }
 
     return(
         <div id="login">
-            <Input size="large" prefix={<UserOutlined />} placeholder="User" ref={text}/><br />
+            <Input allowClear size="large" prefix={<UserOutlined />} placeholder="User" ref={text}/><br />
             <Input.Password size="large" placeholder="Password" 
                 onChange={(e)=> {
                     setPassword(e.target.value);
@@ -39,7 +37,7 @@ const Login =  ({logUser}) => {
                     }
                 }}
             /><br />
-            <Button type="primary" size="large" onClick={login}> Log in</Button>
+            <Button className="loginButton" type="primary"  onClick={login}> Log in</Button>
         </div>
     )
 }

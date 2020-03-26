@@ -1,5 +1,3 @@
-import Http from "../../utils/http.utils"
-
 export const logUser = user =>  ({
     type:'LOG_USER',
     user
