@@ -1,0 +1,27 @@
+version: '3.0'
+services:
+    nodejs:
+        image: keymetrics/pm2:10-alpine
+        ports:
+            - 3000:3000
+        volumes:
+            - .:/usr/src/app  
+            - /usr/src/app/node_modules
+        working_dir: /usr/src/app
+        command: "npm start"
+        environment:
+            - MODE=prod
+            - DATABASE_URL=postgres://todoapp@postgres/todos
+        depends_on:
+            - postgres
+    postgres:
+        image: postgres:9.6.2-alpine
+        environment:
+            POSTGRES_USER: root
+            POSTGRES_PASSWORD: password
+            POSTGRES_DB: swisstournament
+        volumes:
+            - ./database/project.sql:/docker-entrypoint-initdb.d/10-initdb.sql
+        ports:
+            - 5432:5432
+

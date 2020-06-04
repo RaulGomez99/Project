@@ -1,29 +1,62 @@
-const express = require('express');
-const path = require('path');
-const passport = require('passport');
-const cookieParser = require('cookie-parser')
-const routesReact = ["inicio","about","dashboard","register","login"];
+const express       = require('express');
+const path          = require('path');
+const passport      = require('passport');
+const cookieParser  = require('cookie-parser')
+const Sequelize     = require("sequelize");
+const cors          = require("cors");
+const app           = express();
 
-const app = express();
-app.use(cookieParser());
+require('dotenv').config();
 
-app.use(express.json());
+(async function initApp(){
+    app.use(express.json());
+    app.use(cors());
+    app.use(cookieParser());
 
-require('./config/passport');
+    initDB();
+    initRoutesReact();
+    await initPassport();
+    
+    const port = process.env.PORT || 3000;
+    app.use("/api",require('./app/routes/api.routes'));
+    app.use(express.static(path.join(__dirname, 'Frontend/build')));
+    app.listen(port, () => console.log("Listen on port "+port));
+})();
 
-app.use(express.static(path.join(__dirname, 'Frontend/build')));
+async function initPassport(){
+    const passportModel = require('./app/models/passport.model');
+    passport.serializeUser  ((user, done) => done(null, user));
+    passport.deserializeUser((user, done) => done(null, user));
+    passport.use('login', passportModel.loginStrategy());
+    passport.use('jwt'  , passportModel.jwtStrategy());
+    app.use(passport.initialize());
+    app.use(passport.session());
+}
 
-app.use(passport.initialize());
-app.use(passport.session());
+function initRoutesReact(){
+    const routesReact = ["inicio","about","dashboard","register","login"];
+    routesReact.forEach(element =>{
+        app.get('/'+element, (req,res) =>{res.sendFile(path.join(__dirname+'/Frontend/build/index.html'))});
+    });
+}
 
-routesReact.forEach(element =>{
-    app.get('/'+element, (req,res) =>{res.sendFile(path.join(__dirname+'/Frontend/build/index.html'))});
-});
+function initDB(){
+    const { DB_USER, DB_PASSWORD, DB_DATABASE, DB_DIALECT, DB_HOST } = process.env;
+    const sequelize = new Sequelize(DB_DATABASE, DB_USER, DB_PASSWORD, {
+        host: DB_HOST,
+        dialect: DB_DIALECT,
+        define: { timestamps:false } 
+    });
+    let db = {};
 
-app.use("/api/users",require('./app/routes/login.routes'));
+    //Import all the sequlize models
+    db['User'] = sequelize['import']('./app/models/user.model.js');
 
-const port = process.env.PORT || 5000;
-app.listen(port);
+    // Do all the relations
+    Object.keys(db).forEach(modelName => {
+        if (db[modelName].associate) { db[modelName].associate(db); }
+    });
 
-
-console.log('App is listening on port ' + port);
+    db.sequelize = sequelize;
+    app.locals.db = db;
+}

@@ -1,3 +1,4 @@
+const URL = 'http://localhost:3000';
 export default class Http {
 
     static postRequest = (data, url, method) => {
@@ -14,7 +15,7 @@ export default class Http {
     }
 
     static post = async (body, url) => {
-        const request = this.postRequest(body, url, 'POST');
+        const request = this.postRequest(body, URL+url, 'POST');
         const res = await fetch(request);
         const data = res.json();
         return data;

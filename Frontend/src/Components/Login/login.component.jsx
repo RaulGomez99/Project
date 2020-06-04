@@ -37,7 +37,7 @@ const Login =  ({logUser}) => {
                     }
                 }}
             /><br />
-            <Button className="loginButton" type="primary"  onClick={login}> Log in</Button>
+            <Button className="loginButton" type="primary"  onClick={login}> Log in</Button><br /><br />
         </div>
     )
 }

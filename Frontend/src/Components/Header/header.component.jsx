@@ -1,13 +1,19 @@
 import React,{useState} from 'react';
 import './header.css';
 import { MobileView, BrowserView } from 'react-device-detect';
-import { Menu, Button } from 'antd';
+import { Menu, Button, Avatar } from 'antd';
 import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
+import { readUser } from '../../Redux/Reducers/user.reducer'
+import { connect } from 'react-redux';
 
 
 
-const Header = () => {
+const Header = ({user}) => {
     const [collapsed, toggleCollapsed] = useState(false);
+    console.log(user);
+    const img = user ? user.logo : 'default.png';
+    console.log(img)
+    const logo = require('../../../img/avatarImg/'+img);
 
     return (
         <header>
@@ -16,8 +22,8 @@ const Header = () => {
                     <li><a href="/">Inicio</a></li>
                     <li><a href="/about">About</a></li>
                     <li><a href="/dashboard">Dashboard</a></li>
-                    <li className="right"><a href="/login">Log in</a></li>
-                    <li className="right"><a href="/register">Register</a></li>
+                    {!user ? <li className="right"><a href="/login">Log in</a></li> : ""}
+                    {!user ? <li className="right"><a href="/register">Register</a></li> : <Avatar src={logo} className="right"/>}
                 </ul>
             </BrowserView>
             <MobileView>
@@ -50,4 +56,11 @@ const Header = () => {
     )
 }
 
-export default Header;
+const mapStateToProps =state => {
+    return ({
+      user:readUser(state),
+    })
+    
+  }
+
+export default connect(mapStateToProps)(Header);

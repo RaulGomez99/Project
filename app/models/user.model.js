@@ -5,10 +5,11 @@ module.exports = (sequelize, Datatypes) => {
             primaryKey:true
         },
         username:Datatypes.STRING,
-        password:Datatypes.STRING
-    },{freezeTableName:true,timestamps:false});
-    User.associate = models => {
-        User.hasMany(models.UserDetail,{foreignKey:'id_user'});
-    }
+        password:Datatypes.STRING,
+        logo:Datatypes.STRING
+    },{timestamps:false});
+    // User.associate = models => {
+
+    // }
     return User;
 }

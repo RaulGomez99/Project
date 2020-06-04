@@ -1,6 +1,7 @@
 const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
+const {Strategy:LocalStrategy} = require('passport-local');
 const {Strategy:JwtStrategy} = require("passport-jwt");
+const {Strategy:GoogleStrategy} = require( 'passport-google-oauth2' );
 const ExtractJWT = require("passport-jwt").ExtractJwt;
 
 const {verifyPassword, privateKey} = require('../app/models/auth.model');
@@ -12,6 +13,7 @@ passport.use('login',new LocalStrategy(
         passwordField:"password",
         session: true
     }, (username, password, done) => {
+        console.log(username);
         try{
             User.findOne({
                 where:{
@@ -56,6 +58,20 @@ passport.use('jwt', new JwtStrategy(opts,(jwt_payload,done) => {
                 done(null,false,{msg:'Usuario no encontrado'});
             }
         })
+    }catch (err){
+        done(err);
+    }
+}))
+
+passport.use('google', new GoogleStrategy({
+    clientID: '465593342085-eml9f24acl3r07im82nhesve9drhvoc2.apps.googleusercontent.com',
+    clientSecret: 'BCvAB4jeVV8M5DWpoRLXd3Xq',
+    callbackURL: 'http://localhost:3000/auth/google/callback',
+    passReqToCallback   : true
+},(request,accesToken,refreshToken,profile,done) => {
+    try{
+        console.log(profile);
+        done(null,null)
     }catch (err){
         done(err);
     }
