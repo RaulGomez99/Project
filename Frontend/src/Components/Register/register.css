@@ -1,0 +1,54 @@
+.register{
+    margin: 0 auto;
+    margin-top: 10vh;
+    border-radius: 10px;
+    background-color: rgba(0,0,0,0.7);
+    padding: 10px;
+    min-width: 500px;
+}
+
+.registerGrid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 5px 15px;
+}
+
+.register .ant-card-head{
+    border-bottom: none;
+}
+
+.register .ant-card-body{
+    padding-top: 12px;
+}
+
+.register .ant-card-head-wrapper{
+    text-align: center;
+    padding: 0px;
+}
+
+.register .ant-card-head-title{
+    color:white;
+    margin: 0 auto;
+    font-size: 170%;
+    padding: 0px;
+}
+
+.doble{
+    grid-column: span 2;
+    width: 100%;
+}
+
+.loginMessage{
+    color: white;
+    text-align: center;
+}
+
+.register button{
+    width: 100%;
+}
+
+@media  (max-width: 768px) {
+    .register{
+        min-width: 300px;
+    }
+}

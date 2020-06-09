@@ -1,3 +1,83 @@
-.home{
-    color:white;
+.home {
+    margin: 0 auto;
+    margin-top: 10vh;
+    border-radius: 10px;
+    background-color: rgba(0,0,0,0.7);
+    width: 90%;
+    max-width: 1200;
+    padding: 10px;
+    height: 80vh;
+}
+
+.home *{
+    color: white;
+}
+
+.home .title{
+    text-align: justify;
+    text-justify: inter-word;
+}
+
+.home .homeBody{
+    font-size: 140%;
+    text-align: justify;
+    text-justify: inter-word;
+}
+
+.home .homeBody a{
+    text-decoration: underline;
+}
+
+.home .homeButtons{
+    margin-top: 100px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.home .homeButtons button{
+    height: 50px;
+    width: 200px;
+}
+
+@media(min-width: 1000px) {
+    .home .homePageImg{
+        background-color: rgba(0,0,0,0.8);
+        background-position: center;
+        background-repeat: no-repeat; 
+        background-size: cover;
+        height: 400px;
+        width: 40%;
+        border-radius: 20px;
+        border: white 0.5px solid;
+        filter:brightness(0.4);
+        float: right;
+    }
+    
+    .home .homeBody{
+        width: 50%;
+    }
+    
+    .home .title{
+        width: 40%;
+    }
+}
+
+@media  (max-width: 768px) {
+    .home .homeBody {
+        font-size: 100%;
+    }
+    .home .title{
+        font-size: 120%; 
+    }
+    .home .homeButtons button{
+        height: 30px;
+        width: 100px;
+    }
+    .home .homeButtons{
+        margin-top: 25px;
+    }
+
+    .home{
+        height: 87vh;
+    }
 }

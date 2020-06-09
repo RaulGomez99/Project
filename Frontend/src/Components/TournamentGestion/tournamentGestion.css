@@ -1,0 +1,38 @@
+.tournamentGestion{
+    width: 90%;
+    margin: 0 auto;
+    margin-top: 10vh;
+    height: 80vh;
+    border-radius: 10px;
+    background-color: rgba(0,0,0,0.7);
+    border: none;
+}
+
+.tournamentGestion h1{
+    color: white;
+    text-align: center;
+}
+
+.tournamentGestion .participants{
+    height: 57vh;
+}
+
+
+.tournamentGestion  thead tr th{
+    background-color: rgba(150,150,150,0.4);
+}
+
+.tournamentGestion .ant-table-tbody{
+    background-color: rgba(222,222,222,0.6);
+}
+
+
+ .addTournament .ant-modal-footer button{
+    display: none
+}
+
+@media  (max-width: 768px) {
+    .tournamentGestion{
+        height: 87vh;
+    }
+}

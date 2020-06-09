@@ -1,5 +1,6 @@
 const initalState = {
-    user:null
+    user:null,
+    tournamentSelected: null
 }
 
 const reducer = (state = initalState, action) => {
@@ -23,6 +24,37 @@ const reducer = (state = initalState, action) => {
             }
         case 'LOG_OUT':
             return  initalState;
+        
+        case 'ADD_TOURNAMENT':
+            return {
+                ...state,
+                user:{
+                    ...state.user,
+                    tournaments: state.user.tournaments.concat(action.tournament)
+                } 
+            }
+        case 'REMOVE_TOURNAMENT':
+            return {
+                ...state,
+                user:{
+                    ...state.user,
+                    tournaments: state.user.tournaments.filter(tournament => tournament.id != action.id)
+                } 
+            }
+        case 'SELECT_TOURNAMENT':
+            return {
+                ...state,
+                tournamentSelected : state.user.tournaments.filter(tournament => tournament.id === action.id)[0]
+            }
+
+        case 'EDIT_TOURNAMENT':
+            return {
+                ...state,
+                user: {
+                    ...state.user,
+                    tournaments: state.user.tournaments.filter(tournament => tournament.id != action.id).concat(action.tournament)
+                }
+            }
             
         default : 
             return({...state})
@@ -32,4 +64,5 @@ const reducer = (state = initalState, action) => {
 export default reducer;
 
 export const readUser = state => (state.userReducer.user);
+export const readTournament = state => (state.userReducer.tournamentSelected);
 export const readToken = state => (state.userReducer.token);

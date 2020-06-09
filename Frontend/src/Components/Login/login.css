@@ -1,26 +1,39 @@
-#login {
-  border: 1px solid black;
-  border-radius: 10px;
-  width: 30%;
-  min-width: 200px;
+.login {
   margin: 0 auto;
-  margin-top: 90px;
-  text-align: center;
-  padding: 20px 0% 20px 0%;
+  margin-top: 10vh;
+  border-radius: 10px;
   background-color: rgba(0,0,0,0.7);
-}
-
- input {
-  width: 80%;
-}
-
-#login > span {
-  width: 80%;
-  border-radius: 2px;
-  margin-top: 10px;
+  width: 50%;
+  max-width: 500px;
+  min-width: 300px;
+  padding: 10px;
 } 
 
+.login .ant-input-affix-wrapper{
+  margin: 0 auto;
+  margin-bottom: 15px;
+}
 
-.loginButton{
-  margin-top: 10px;
+.login button{
+  width: 100%;
+}
+
+.login .ant-card-head{
+  border-bottom: none;
+}
+
+.login .ant-card-body{
+  padding-top: 12px;
+}
+
+.login .ant-card-head-wrapper{
+  text-align: center;
+  padding: 0px;
+}
+
+.login .ant-card-head-title{
+  color:white;
+  margin: 0 auto;
+  font-size: 170%;
+  padding: 0px;
 }

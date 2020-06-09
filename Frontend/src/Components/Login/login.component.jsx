@@ -1,44 +1,54 @@
-import React, { useState, useRef } from 'react';
+import React from 'react';
 import "./login.css"
-import { Input, Button } from 'antd';
+import { Input, Button, Card, Form } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
-import Http from "../../utils/http.utils"; 
+import Cookies from 'universal-cookie';
+import { connect } from 'react-redux';
+import { logUser } from '../../Redux/Actions/user.action';
 
-import {connect} from 'react-redux';
-import {logUser} from '../../Redux/Actions/user.action';
+const env = require('../../env.json');
 
+const Login =  ({ logUser }) => {
 
-const Login =  ({logUser}) => {
-    const text = useRef("");
-    const [password,setPassword] = useState("");
-
-    const login = () => {
+    const login = async (values) => {
+        require('dotenv').config();
+        console.log(process.env)
         const data = {
-            username:text.current.state.value,
-            password
+            username:values.user.username,
+            password:values.user.password
         }
-        Http.post(data,'/api/users/login').then(resp=>{
-            console.log(resp.user)
-            if(resp.error) alert(resp.error);
-            else logUser(resp.user);
-        }) 
+        const json = await fetch(`${env.URL}/api/users/login`,{
+            method:'POST',
+            body: JSON.stringify(data),
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        const resp = await json.json();
+        console.log(resp.user)
+        if(resp.msg) alert(resp.msg);
+        else {
+            const cookies = new Cookies();
+            cookies.set('jwt', resp.token, { path: '/' });
+            logUser(resp.user);
+        }
     }
 
     return(
-        <div id="login">
-            <Input allowClear size="large" prefix={<UserOutlined />} placeholder="User" ref={text}/><br />
-            <Input.Password size="large" placeholder="Password" 
-                onChange={(e)=> {
-                    setPassword(e.target.value);
-                }}
-                onKeyDown={(e) => {
-                    if(e.keyCode===13){
-                        login();
-                    }
-                }}
-            /><br />
-            <Button className="loginButton" type="primary"  onClick={login}> Log in</Button><br /><br />
-        </div>
+        <Card className="login" bordered={false} title="Log in">
+            <Form  onFinish={login}>
+                <Form.Item name={['user', 'username']} hasFeedback rules={[{ required: true, message:"UserName is required"}]}>
+                    <Input prefix={<UserOutlined/>} allowClear placeholder="User" />
+                </Form.Item>
+                <Form.Item name={['user', 'password']} hasFeedback rules={[{ required: true, message:"Password is required"}]}>
+                    <Input.Password placeholder="Password" />
+                </Form.Item>
+                <p className="loginMessage doble">Si no tienes cuenta te puedes <a href="register">registrar</a> aquí</p>
+                <Form.Item>
+                    <Button htmlType="submit" className="loginButton" type="primary"> Log in</Button><br /><br />
+                </Form.Item>
+            </Form>
+        </Card>
     )
 }
 
