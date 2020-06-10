@@ -7,19 +7,30 @@ import ErrorManager from '../../errorManager';
 
 const env = require('../../env.json');
 
-const TournamentMatch = ({ match, id }) => {
+const TournamentMatch = ({ match, id, update, tournament }) => {
     const getDefaultValue = () => {
-        if(match.home.points==1) return "1";
-        if(match.away.points==1) return "-1";
-        if(match.home.points==0.5) return "0";
+        if(match.home.points ==   1)   return "1";
+        if(match.away.points ==   1)   return "-1";
+        if(match.home.points=== 0.5) return "0";
         return null;
     }
 
     const sendPairResult = async (e) => {
         const matchSend = match;
         const { value } = e.target;
-        matchSend.home.points = value ==  1 ? 1 : value == 0 ? 0.5 : 0;
-        matchSend.away.points = value == -1 ? 1 : value == 0 ? 0.5 : 0;
+        if(value==2 ||value==-2){
+            const homeDropedOut = tournament.participants.filter(participant => participant.id === match.home.id)[0].dropedOut;
+            const awayDropedOut = tournament.participants.filter(participant => participant.id === match.away.id)[0].dropedOut;
+            matchSend.away.points    = value ==  2 ? homeDropedOut ? 0 : awayDropedOut ? 0 : 1 : 0;
+            matchSend.home.points    = value == -2 ? awayDropedOut ? 0 : homeDropedOut ? 0 : 1 : 0;
+            matchSend.dropedOut = {};
+            matchSend.dropedOut.home = value ==  2 ? homeDropedOut ? false : true : undefined;
+            matchSend.dropedOut.away = value == -2 ? awayDropedOut ? false : true : undefined;
+            e.target.value = value == 2 ? 1 : -1;
+        }else{
+            matchSend.home.points = value ==  1 ? 1 : value == 0 ? 0.5 : 0;
+            matchSend.away.points = value == -1 ? 1 : value == 0 ? 0.5 : 0;
+        }
 
         const cookies = new Cookies();
         const token = cookies.get('jwt');
@@ -32,16 +43,19 @@ const TournamentMatch = ({ match, id }) => {
             }
         });
         const resp = await json.json();
-        if(resp.msg) return ErrorManager(resp.msg);
-        console.log(resp)
+        if(resp.msg) return ErrorManager(resp.msg);  
+        update(resp);      
     }
 
     return (
         <div className="match">
+            <h2>Mesa {match.table}</h2>
             <Radio.Group defaultValue={getDefaultValue()} onChange={sendPairResult}>
-                <Radio.Button value="1" className="white">{match.home.id}</Radio.Button>
-                <Radio.Button value="0" className="gray">Tablas</Radio.Button>
-                <Radio.Button value="-1" className="black">{match.away.id}</Radio.Button>
+                <Radio.Button value=" 2" className="white">{tournament.participants.filter(participant => participant.id === match.home.id)[0].dropedOut ? "Volver" : "Abandona"}</Radio.Button>
+                <Radio.Button value= "1" className="white" disabled={tournament.participants.filter(participant => participant.id === match.home.id)[0].dropedOut || false}>{match.home.id}</Radio.Button>
+                <Radio.Button value= "0" className="gray"  disabled={(tournament.participants.filter(participant => participant.id === match.home.id)[0].dropedOut || false) || (tournament.participants.filter(participant => participant.id === match.away.id)[0].dropedOut || false)}>Tablas</Radio.Button>
+                <Radio.Button value="-1" className="black" disabled={tournament.participants.filter(participant => participant.id === match.away.id)[0].dropedOut || false}>{match.away.id}</Radio.Button>
+    <Radio.Button value="-2" className="black">{tournament.participants.filter(participant => participant.id === match.away.id)[0].dropedOut ? "Volver" : "Abandona"}</Radio.Button>
             </Radio.Group>
         </div>
     )

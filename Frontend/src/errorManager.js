@@ -9,7 +9,7 @@ const errorMessage = (msg) => {
 }
 
 const ErrorManager = (msg) => {
-    return (<span>{errorMessage(msg)}</span>);
+    return (<pre>{errorMessage(msg)}</pre>);
 }
 
 export default ErrorManager;

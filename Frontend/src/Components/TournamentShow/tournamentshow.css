@@ -1,0 +1,78 @@
+.tournamentShow {
+    margin: 0 auto;
+    margin-top: 10vh;
+    border-radius: 10px;
+    background-color: rgba(0,0,0,0.7);
+    width: 90%;
+    max-width: 1200;
+    padding: 10px;
+    height: 80vh;
+    text-align: center;
+}
+
+.tournamentShow h1{
+    color: white;
+}
+
+.tournamentShow .matches{
+    display: grid;
+    width: 73%;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 20px;
+}
+
+.tournamentShow .match{
+    background-color: rgba(255, 255, 255, 0.4);
+    text-align: center;
+    min-height: 60px;
+    display: table;
+    border-radius: 20px;
+}
+
+.tournamentShow .match .ant-radio-group{
+    display: table-cell;
+    vertical-align: middle;
+}
+
+
+.tournamentShow .match .white{
+    background-color: white !important;
+    color: #372F2F !important;
+    border: 1px solid #372F2F;
+    margin: 4px;
+}
+
+.tournamentShow .match .black{
+    background-color: #372F2F !important;
+    color: white !important;
+    margin: 4px;
+}
+
+.tournamentShow .match .gray{
+    background-color: gray !important;
+    color: black !important;
+    margin: 4px;
+}
+
+.tournamentShow .match .ant-radio-button-wrapper-checked{
+    background-color: #1890ff !important;
+    color: black !important;
+}
+
+.tournamentShow img{
+    width: 80%;
+}
+
+.tournamentShow .right{
+    float: right;
+}
+
+.tournamentShow .left{
+    float: left;
+}
+
+@media  (max-width: 768px) {
+    .tournamentShow{
+        height: 87vh;
+    }
+}

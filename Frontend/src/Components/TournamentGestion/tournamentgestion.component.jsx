@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import { Table, Tag, Button, Card, Modal, Input, Form } from "antd";
-import { DeleteOutlined, EditOutlined, UserAddOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, UserAddOutlined, EyeOutlined } from "@ant-design/icons";
 
 import { connect } from 'react-redux';
 import { readUser, readTournament } from '../../Redux/Reducers/user.reducer'
@@ -24,7 +24,6 @@ const TournamentGestion = ({ user, addTournament, removeTournament, selectTourna
         {title: "Descripcion", dataIndex: "description", key: "description"},
         {title: "Estado", key: "state", dataIndex: "state", render: state => (
             <span>
-                {console.log(state+" asd")}
                 {state>0 ? <Tag color="green">Ronda {state}</Tag> 
                     :  state<0 ? <Tag color="red">Finalizado</Tag> 
                     : <Tag color="grey">En prescripción</Tag>}
@@ -35,8 +34,9 @@ const TournamentGestion = ({ user, addTournament, removeTournament, selectTourna
           key: "action",
           render: (text, record) => (
             <span>
-              <EditOutlined style={{ marginRight: 16, cursor:'pointer' }} onClick={() => {tournamentEdit(record.id);}}/>
-              <DeleteOutlined style={{ color: "red", cursor:'pointer' }}onClick={() => {deleteTournament(record.id);}}/>
+              {record.state != -1 ? <EditOutlined style={{ marginRight: 16, cursor:'pointer' }} onClick={() => {tournamentEdit(record.id);}}/>:""}
+              {record.state <=  0 ? <DeleteOutlined style={{ marginRight: 16, color: "red", cursor:'pointer' }}  onClick={() => {deleteTournament(record.id);}}/>:""}
+              {record.state !=  0 ? <a href={`${env.LOCAL_URL}/tournament/${record.id}`}><EyeOutlined style={{color: "blue", cursor:'pointer' }}/></a>:""}
             </span>
           )
         }
@@ -55,7 +55,6 @@ const TournamentGestion = ({ user, addTournament, removeTournament, selectTourna
         });
         const resp = await json.json();
         if(resp.msg) return ErrorManager(resp.msg);
-        console.log("Borrando "+id)
         removeTournament(id)
     }
 
@@ -84,7 +83,6 @@ const TournamentGestion = ({ user, addTournament, removeTournament, selectTourna
 
     return (
         <Card className="tournamentGestion">
-            {console.log(tournament)}
             {tournament ? <TournamentEditor /> :
             <div className="gestion">
             <h1>Gestionar torneos</h1>
@@ -104,6 +102,7 @@ const TournamentGestion = ({ user, addTournament, removeTournament, selectTourna
                     </Form.Item>
                 </Form>
             </Modal> </div>}
+            <div id="print"></div>
         </Card>
     )
 }

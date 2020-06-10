@@ -38,7 +38,7 @@ const reducer = (state = initalState, action) => {
                 ...state,
                 user:{
                     ...state.user,
-                    tournaments: state.user.tournaments.filter(tournament => tournament.id != action.id)
+                    tournaments: state.user.tournaments.filter(tournament => tournament.id !== action.id)
                 } 
             }
         case 'SELECT_TOURNAMENT':
@@ -52,7 +52,7 @@ const reducer = (state = initalState, action) => {
                 ...state,
                 user: {
                     ...state.user,
-                    tournaments: state.user.tournaments.filter(tournament => tournament.id != action.id).concat(action.tournament)
+                    tournaments: state.user.tournaments.filter(tournament => tournament.id !== action.id).concat(action.tournament)
                 }
             }
             

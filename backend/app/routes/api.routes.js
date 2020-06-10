@@ -20,6 +20,8 @@ router.get('/paypal/payment/:id' , PaypalController.payment);
 router.get('/paypal/success'     , PaypalController.success);
 router.get('/paypal/cancel'      , PaypalController.cancel);
 
+router.get('/tournament/:id'  ,TournametController.getTournament);
+
 router.post(  '/tournaments'                      , LoginController.findUser, TournametController.addTournament);
 router.delete('/tournaments/:id'                  , LoginController.findUser, TournametController.deleteTournament);
 router.post(  '/tournaments/addParticipant/:id'   , LoginController.findUser, TournametController.addParticipant);
@@ -27,6 +29,8 @@ router.delete('/tournaments/deleteParticipant/:id', LoginController.findUser, To
 router.post(  '/tournaments/startTournament/:id'  , LoginController.findUser, TournametController.startTournament);
 router.post(  '/tournaments/pairResult/:id'       , LoginController.findUser, TournametController.pairResult);
 router.post(  '/tournaments/changeRound/:id'      , LoginController.findUser, TournametController.changeRound);
+router.post(  '/tournaments/addCSV/:id'           , LoginController.findUser, TournametController.addCSV)
+
 
 //router.get(  '/users/tournaments/:id', LoginController.findUser , UserController.getAllTournaments);
 

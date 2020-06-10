@@ -42,7 +42,7 @@ const Home =  ({ user }) => {
       <div className="homePageImg" style={{backgroundImage:`url(${image})`}}></div>
       <h1 className="title">Web en la que podrás gestionar con facilidad tus torneos basado en el sistema suizo como emparejamiento</h1>
       <div className="homeBody">
-        <p>Esto es una web hecha para organizar emparejamientos de torneos con el <a target="_blank" href="https://es.wikipedia.org/wiki/Sistema_suizo">sistema suizo</a>. Sirve para cualquier cosa en la que quieras usar este formato de emparejamiento, pero esta basado sobretodo para ajedrez.</p>
+        <p>Esto es una web hecha para organizar emparejamientos de torneos con el <a target="_blank" rel="noopener noreferrer" href="https://es.wikipedia.org/wiki/Sistema_suizo">sistema suizo</a>. Sirve para cualquier cosa en la que quieras usar este formato de emparejamiento, pero esta basado sobretodo para ajedrez.</p>
         <p>En esta web podrás gestionar siendo premiun todos los torneos que quieras sin limites de personas aunque se ofrece una versión gratuita de prueba de 1 torneo hasta 8 personas</p>
         {user ? user.ispremiun ? "" : isLogedHome() : isntLogedHome()}
       </div>

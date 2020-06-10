@@ -1,3 +1,4 @@
+import CSVReader from 'react-csv-reader'
 import React from 'react';
 import { Input, Form, Button, Table } from 'antd';
 import { connect } from 'react-redux';
@@ -9,6 +10,7 @@ import './tournamenteditor.css'
 import { DeleteOutlined } from "@ant-design/icons";
 const env = require('../../env.json');
 
+
 const Tournament1Fase = ({tournament, editTournament, addTournament, selectTournament }) => {
     const sendParticipant = async (values) => {
         const cookies = new Cookies();
@@ -17,7 +19,6 @@ const Tournament1Fase = ({tournament, editTournament, addTournament, selectTourn
             id: values.participant.name,
             seed: values.participant.seed
         }}
-        console.log(data, values);
         const json = await fetch(`${env.URL}/api/tournaments/addParticipant/${tournament.id}`, {
             method: 'POST',
             body: JSON.stringify(data),
@@ -80,6 +81,31 @@ const Tournament1Fase = ({tournament, editTournament, addTournament, selectTourn
         setTimeout(()=>selectTournament(resp.id),200) 
     }
 
+    const sendFile = async (data, fileInfo) =>{
+        const dataSend = data.map(participant => ({
+            id: participant[0],
+            seed : participant[1]
+        }));
+        console.log(dataSend)
+        const cookies = new Cookies();
+        const token = cookies.get('jwt');
+        console.log(tournament.id)
+        const json = await fetch(`${env.URL}/api/tournaments/addCSV/${tournament.id}`, {
+            method: 'POST',
+            body: JSON.stringify(dataSend),
+            headers: {
+                "Content-Type": "application/json",
+                authtoken: token
+            }
+        });
+        const resp = await json.json();
+        const { tournament:tournamento, error } = resp;
+        if(error) ErrorManager(error);
+        tournamento.participants = JSON.parse(tournamento.participants);
+        editTournament(tournamento.id, tournamento);
+        setTimeout(()=>selectTournament(tournamento.id),200) 
+    }
+
     return (
         <div className="fase1">
             <h1>{tournament.name}</h1>
@@ -94,8 +120,9 @@ const Tournament1Fase = ({tournament, editTournament, addTournament, selectTourn
                     <Button htmlType='submit' type="primary">Añadir usuario</Button>
                 </Form.Item>
             </Form>
+            <CSVReader onFileLoaded={sendFile} />
             <div className="participants">
-                <Table dataSource={tournament.participants} columns={columns} />
+                <Table dataSource={tournament.participants} columns={columns} className="tablita"/>
             </div>
             <footer ><Button type="primary"onClick={startTournament}>Pasar a siguiente fase</Button></footer>
         </div>

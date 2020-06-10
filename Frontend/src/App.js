@@ -9,7 +9,7 @@ import Login from "./Components/Login/login.component";
 import Register from "./Components/Register/register.component";
 import Header from './Components/Header/header.component';
 import TournamentGestion from './Components/TournamentGestion/tournamentgestion.component';
-
+import TournamentShow from "./Components/TournamentShow/tournamentshow.component";
 
 import Cookies from 'universal-cookie';
 import {readUser, readTournament} from './Redux/Reducers/user.reducer'
@@ -25,7 +25,6 @@ const App = ({logUser,user, tournament}) => {
     const findUserCookie = async()=>{
       const cookies = new Cookies();
       const token = cookies.get('jwt');
-      console.log(env.URL);
       const userResponse = await fetch(`${env.URL}/api/users/findUser`, {
         method: 'GET',
         headers: {
@@ -35,12 +34,11 @@ const App = ({logUser,user, tournament}) => {
       });
       const json = await userResponse.json();
       if(json.user){
-        console.log(json.user)
         logUser(json.user);
       }
     }
     findUserCookie();
-  },[])
+  },[logUser])
 
   const returnCorrectUrlLogin = (Component) => (
     user === null ? <Component /> : <Redirect to='/'/>
@@ -60,10 +58,6 @@ const App = ({logUser,user, tournament}) => {
     }
     return <Component/>
   }
-
-  const returnIsTournament = (Component) => (
-    tournament ? <Component /> : <Redirect to='/tournaments' />
-  )
   
   return (
     <div className="app">
@@ -76,6 +70,7 @@ const App = ({logUser,user, tournament}) => {
               <Route path="/dashboard">{returnCorrectUrlContent(<h1>Dashboard</h1>)}</Route>
               <Route path="/register">{returnCorrectUrlLogin(Register)}</Route>
               <Route path="/login">{returnCorrectUrlLogin(Login)}</Route>
+              <Route path="/tournament/:id"><TournamentShow /></Route>
             </Switch>
         </Router>
       </div>

@@ -12,7 +12,7 @@
 
 .tournamentEditor .participants{
     width: 85vw;
-    height: 61vh;
+    height: 65vh !important;
 }
 
 .tournamentEditor .participants .trash{
@@ -24,7 +24,7 @@
 }
 
 .tournamentEditor{
-    height: 60vh;
+    height: 70vh;
 }
 
 .tournamentEditor .table thead tr th{
@@ -45,21 +45,24 @@
 
 .tournamentEditor .matches{
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: 20%;
     grid-gap: 20px;
+    height: 70vh;
+    width: 70%;
+    overflow: auto;
 }
 
 .tournamentEditor .matches .match{
     background-color: rgba(255, 255, 255, 0.4);
     text-align: center;
-    min-height: 60px;
+    min-height: 90px;
     display: table;
     border-radius: 20px;
 }
 
 .tournamentEditor .matches .match .ant-radio-group{
-    display: table-cell;
-    vertical-align: middle;
+    display: block;
 }
 
 .tournamentEditor .matches .match .white{
@@ -100,16 +103,8 @@
     border-radius: 100%;
 }
 
-@media  (max-width: 1200px) {
-    .tournamentEditor .matches{
-        grid-template-columns: 1fr 1fr 1fr;
-    }
-}
-
-@media  (max-width: 850px) {
-    .tournamentEditor .matches{
-        grid-template-columns: 1fr 1fr;
-    }
+.tournamentEditor footer button{
+    margin: 24px;
 }
 
 @media  (max-width: 768px) {

@@ -50,7 +50,8 @@ function getStandings(options, round, participants, matches) {
       seed: participant.seed,
       wins: 0,
       losses: 0,
-      tiebreaker: scores[participant.id]
+      tiebreaker: scores[participant.id],
+      dropedOut: participant.dropedOut
     }
     return standings
   }, {})
@@ -71,7 +72,8 @@ function getStandings(options, round, participants, matches) {
       seed: value.seed,
       wins: value.wins,
       losses: value.losses,
-      tiebreaker: value.tiebreaker
+      tiebreaker: value.tiebreaker,
+      dropedOut : value.dropedOut
     })
     return standings
   }, []).sort((a, b) => {
@@ -101,7 +103,7 @@ function getMatchups(options, round, participants, matches) {
     m.id = index++
   }
 
-  mappings = mappings.filter(m => !m.droppedOut)
+  mappings = mappings.filter(m => !m.dropedOut)
 
   if(mappings.length % 2 === 1) {
     // we simulate the bye having played against every team with a bye
@@ -192,7 +194,7 @@ function getMappings(participants, matches) {
     }, {
       id: participant.id,
       seed: participant.seed,
-      droppedOut: participant.droppedOut,
+      dropedOut: participant.dropedOut,
       points: 0,
       opponents: []
     }))

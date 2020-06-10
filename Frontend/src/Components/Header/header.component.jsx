@@ -1,13 +1,11 @@
-import React,{useState} from 'react';
+import React from 'react';
 import './header.css';
 import { Avatar } from 'antd';
 import { readUser } from '../../Redux/Reducers/user.reducer'
 import { connect } from 'react-redux';
 
 const Header = ({user}) => {
-    console.log(user);
     const img = user ? user.logo : 'default.png';
-    console.log(img)
     const logo = require('../../../img/avatarImg/'+img);
 
     return (

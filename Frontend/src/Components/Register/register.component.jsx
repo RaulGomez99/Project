@@ -24,7 +24,6 @@ const Register =  () => {
             },
         });
         const resp = await json.json();
-        console.log(resp.user)
         if(resp.error) alert(resp.error);
         else logUser(resp.user);
     }
@@ -49,9 +48,7 @@ const Register =  () => {
                 </Form.Item>
                 <Form.Item className="doble" name={['user', 'repeatPassword']} hasFeedback rules={[
                     { required: true, message:"Repeat password is required and equal", validator:async (rule,value) =>{
-                        console.log(value);
                         const passwordRegister = document.getElementById("user_password").value;
-                        console.log(passwordRegister)
                         if(value!==passwordRegister){
                             throw new Error("Not repeat password");
                         }

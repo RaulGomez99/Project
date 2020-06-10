@@ -54,5 +54,12 @@ function findUser(req,res,next) {
 
 async function returnUser(req, res){
     const { User, Tournament } = req.app.locals.db;
-    res.send({user:await User.findByPk(req.user.id,{include:[{model:Tournament}]})});
+    const user = await User.findByPk(req.user.id,{include:[{model:Tournament}]});
+    user.tournaments = user.tournaments.map(tournament => {
+        return {
+            ...tournament.dataValues,
+            key: tournament.dataValues.id
+        }
+    })
+    res.send({user: {...user.dataValues, password:undefined , tournaments: user.tournaments}});
 }

@@ -11,8 +11,6 @@ const env = require('../../env.json');
 const Login =  ({ logUser }) => {
 
     const login = async (values) => {
-        require('dotenv').config();
-        console.log(process.env)
         const data = {
             username:values.user.username,
             password:values.user.password
@@ -25,7 +23,6 @@ const Login =  ({ logUser }) => {
             },
         });
         const resp = await json.json();
-        console.log(resp.user)
         if(resp.msg) alert(resp.msg);
         else {
             const cookies = new Cookies();
