@@ -6,13 +6,13 @@
 .tournamentEditor form{
     display: grid;
     width: 100%;
-    grid-template-columns: 2fr 2fr 1fr;
+    grid-template-columns: 2fr 2fr 2fr 1fr;
     grid-gap: 30px;
 }
 
 .tournamentEditor .participants{
     width: 85vw;
-    height: 65vh !important;
+    height: 65vh;
 }
 
 .tournamentEditor .participants .trash{
@@ -48,7 +48,7 @@
     grid-template-columns: repeat(2, 1fr);
     grid-auto-rows: 20%;
     grid-gap: 20px;
-    height: 70vh;
+    height: 60vh;
     width: 70%;
     overflow: auto;
 }

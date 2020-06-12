@@ -10,11 +10,14 @@ router.post('/hola/:id', (req,res)=>{
     res.send({param:req.params.id,body:req.body})
 })
 
-router.post('/users/register' , LoginController.register);
-router.post('/users/login'    , LoginController.logIn);
-router.get( '/users/logout'   , LoginController.logOut);
+router.post('/users/register'              , LoginController.register);
+router.post('/users/login'                 , LoginController.logIn);
+router.get( '/users/logout'                , LoginController.logOut);
+router.get( '/users/checkUser/:username'   , LoginController.checkUser);
+router.get( '/users/checkEmail/:email'      , LoginController.checkEmail);
 
-router.get('/users/findUser', LoginController.findUser,  LoginController.returnUser);
+router.get('/users/findUser'      , LoginController.findUser,  LoginController.returnUser);
+router.post('/users/editLogo/:id' , LoginController.findUser,  UserController.editUser);
 
 router.get('/paypal/payment/:id' , PaypalController.payment);
 router.get('/paypal/success'     , PaypalController.success);
@@ -30,8 +33,7 @@ router.post(  '/tournaments/startTournament/:id'  , LoginController.findUser, To
 router.post(  '/tournaments/pairResult/:id'       , LoginController.findUser, TournametController.pairResult);
 router.post(  '/tournaments/changeRound/:id'      , LoginController.findUser, TournametController.changeRound);
 router.post(  '/tournaments/addCSV/:id'           , LoginController.findUser, TournametController.addCSV)
-
-
-//router.get(  '/users/tournaments/:id', LoginController.findUser , UserController.getAllTournaments);
+router.post(  '/tournaments/deshacer/:id'         , LoginController.findUser, TournametController.deshacer)
+router.get(   '/tournaments/returnImg/:id'       , TournametController.returnImg)
 
 module.exports = router;

@@ -3,11 +3,27 @@ import "./register.css"
 import { Input, Button, Card, Form } from 'antd';
 
 import { connect } from 'react-redux';
-import { logUser } from '../../Redux/Actions/user.action';
+import ErrorManager from '../../errorManager';
 
 const env = require('../../env.json');
 
 const Register =  () => {
+
+    const validateUsername = async (_, username) => {
+        const json = await fetch(`${env.URL}/api/users/checkUser/`+username);
+        const resp = await json.json();
+        if(resp.res) return Promise.reject('No puedes poner emails repetidos');
+        return Promise.resolve();
+    }
+
+    const validateEmail = async (_, email) => {
+        const json = await fetch(`${env.URL}/api/users/checkEmail/`+email);
+        const resp = await json.json();
+        if(resp.res) return Promise.reject('No puedes poner emails repetidos');
+        return Promise.resolve();
+    }
+
+
     const register = async (values) => {
         const data ={
             username:values.user.username,
@@ -24,8 +40,8 @@ const Register =  () => {
             },
         });
         const resp = await json.json();
-        if(resp.error) alert(resp.error);
-        else logUser(resp.user);
+        if(resp.msg) return ErrorManager(resp.msg);
+        else if(resp.success) window.location.replace(`${env.LOCAL_URL}/login`);
     }
 
     return(
@@ -37,10 +53,10 @@ const Register =  () => {
                 <Form.Item name={['user', 'lastName']} hasFeedback rules={[{ required: true, message:"Last name is required"}]}>
                     <Input placeholder="Last name"/>
                 </Form.Item>
-                <Form.Item className="doble" name={['user', 'username']} hasFeedback rules={[{ required: true, message:"UserName is required correct email"}]}>
+                <Form.Item className="doble" name={['user', 'username']} hasFeedback rules={[{ required: true, message:"UserName is required correct email"},{validator:validateUsername}]}>
                     <Input placeholder="UserName"/>
                 </Form.Item >
-                <Form.Item className="doble" name={['user', 'email']} hasFeedback rules={[{ required: true, type:"email", message:"Email is required correct email" }]}>
+                <Form.Item className="doble" name={['user', 'email']} hasFeedback rules={[{ required: true, type:"email", message:"Email is required correct email" },{validator: validateEmail}]}>
                     <Input placeholder="Email"/>
                 </Form.Item >
                 <Form.Item id="user_password" className="doble" name={['user', 'password']} hasFeedback rules={[{ required: true, message:"Password is required" }]}>

@@ -39,17 +39,10 @@ const TournamentShow = () => {
         if(state===-1){
             state = Math.ceil(Math.log2(tournament.participants.length));
         } 
-        for(let i = state; i>0; i--){
+        for(let i = 1; i<=state; i++){
             retorna.push(i);
         }
-        return(
-            <Select defaultValue={tournament.state!= -1 ? tournament.state :Math.ceil(Math.log2(tournament.participants.length)) } className="left" onChange={ (value) => {setSelected(value)}}>
-                {retorna.map(state => {
-                    console.log(state)
-                    return <Option value={state}>{state!==-1 ? `Ronda ${state}`: "Finalizado"}</Option> 
-                })}
-            </Select>
-        )
+        return retorna;
     }
 
     useEffect(()=>{
@@ -62,6 +55,7 @@ const TournamentShow = () => {
         }
         getTournament(id);
     }, [])
+    let i = 0;
 
     return(
         <Card className="tournamentShow" bordered={false} >
@@ -74,14 +68,33 @@ const TournamentShow = () => {
                 //-------------------
                 <div className="tournamentDiv">
                     <h1 className="right">{tournament.state!==-1 ? "Ronda "+tournament.state : "Finalizado"}</h1>
-                    {generateSelect(tournament.state)}
+                    {/*generateSelect(tournament.state)*/}
                     <h1>{tournament.name}</h1>
-                    {tournament.matches ? <Table dataSource={swissTournament.getStandings(Infinity, tournament.participants, tournament.matches).sort(sortAlgorithm)} columns={columns} style={{width : "25%", float: "right", height: "50vh"}}/> : ""}
-                    <div className="matches">
-                        {tournament.matches.filter(match => match.round === selected).map(matchup => {
+                    {tournament.matches ? <Table size="small" dataSource={swissTournament.getStandings(Infinity, tournament.participants, tournament.matches).sort(sortAlgorithm)} columns={columns} style={{width : "25%", float: "right", height: "50vh"}}/> : ""}
+                    <div className="round" style={{overflow:"auto", height:"50vh"}}>
+                        {
+                            generateSelect(tournament.state).map(round=>{
+                                return(
+                                    <div>
+                                        <h2 style={{textAlign:"center", color:"white"}}>Ronda {round}</h2>
+                                        <div className="matches">
+                                            {tournament.matches.filter(match => match.round === round).map(matchup=>{
+                                                if(matchup.home.id === null || matchup.away.id === null) return "";
+                                                return <TournamentMatch match={matchup} key={matchup.home.id}/>
+                                            })}
+                                        </div>
+                                    </div>
+                                ) 
+                            })
+                        }
+                        {/* {tournament.matches.map(matchup => {
+                            if(i!=matchup.round){
+                                i = matchup.round;
+                                return <TournamentMatch match={matchup} key={matchup.home.id}/>
+                            }
                             if(matchup.home.id === null || matchup.away.id === null) return "";
                             return <TournamentMatch match={matchup} key={matchup.home.id}/>;
-                        })}
+                        })} */}
                     </div>
                     
                 </div>

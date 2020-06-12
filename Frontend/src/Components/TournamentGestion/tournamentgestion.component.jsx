@@ -1,6 +1,6 @@
-import React, {useState} from "react";
-import { Table, Tag, Button, Card, Modal, Input, Form } from "antd";
-import { DeleteOutlined, EditOutlined, UserAddOutlined, EyeOutlined } from "@ant-design/icons";
+import React, {useState, useEffect} from "react";
+import { Table, Tag, Button, Card, Modal, Input, Form, Upload, Avatar } from "antd";
+import { DeleteOutlined, EditOutlined, UserAddOutlined, EyeOutlined, FilePdfOutlined, UploadOutlined } from "@ant-design/icons";
 
 import { connect } from 'react-redux';
 import { readUser, readTournament } from '../../Redux/Reducers/user.reducer'
@@ -8,20 +8,30 @@ import { addTournament, removeTournament, selectTournament } from '../../Redux/A
 import TournamentEditor from '../TournamentEditor/tournamenteditor.component'
 
 import Cookies from 'universal-cookie';
+import pdfCreate from '../../lib/pdfCreate';
 
 import ErrorManager from '../../errorManager';
 
 import './tournamentGestion.css';
 
 const env = require('../../env.json');
+const defaultImg = require('./default.png');
 
 const TournamentGestion = ({ user, addTournament, removeTournament, selectTournament, tournament }) => {
     const [showTournamentForm, setShowTournamentForm] = useState(false);
+
+    useEffect(()=>{
+        if(!user.ispremiun) selectTournament(user.tournaments[0].id);
+      })
 
     const columns = [
         {title: "ID", dataIndex: "id", key: "id"},
         {title: "Nombre Torneo", dataIndex: "name", key: "name"},
         {title: "Descripcion", dataIndex: "description", key: "description"},
+        {title: "Logo", dataIndex:'idphoto', key:'idphoto', render : state => {
+            if(state) return <Avatar src={state}/>
+            return <Avatar src={defaultImg}/>
+        }},
         {title: "Estado", key: "state", dataIndex: "state", render: state => (
             <span>
                 {state>0 ? <Tag color="green">Ronda {state}</Tag> 
@@ -36,7 +46,8 @@ const TournamentGestion = ({ user, addTournament, removeTournament, selectTourna
             <span>
               {record.state != -1 ? <EditOutlined style={{ marginRight: 16, cursor:'pointer' }} onClick={() => {tournamentEdit(record.id);}}/>:""}
               {record.state <=  0 ? <DeleteOutlined style={{ marginRight: 16, color: "red", cursor:'pointer' }}  onClick={() => {deleteTournament(record.id);}}/>:""}
-              {record.state !=  0 ? <a href={`${env.LOCAL_URL}/tournament/${record.id}`}><EyeOutlined style={{color: "blue", cursor:'pointer' }}/></a>:""}
+              {record.state !=  0 ? <a href={`${env.LOCAL_URL}/tournament/${record.id}`}><EyeOutlined style={{marginRight: 16, color: "blue", cursor:'pointer' }}/></a>:""}
+              {record.state !=  0 ? <FilePdfOutlined style={{color: "gray", cursor:'pointer' }} onClick={()=>pdfCreate.generateTournamentPDF(record)}/>:""}
             </span>
           )
         }
@@ -62,10 +73,16 @@ const TournamentGestion = ({ user, addTournament, removeTournament, selectTourna
         selectTournament(id);
     }
 
-    const createTournament = async (values) => {
+    function getBase64(img, tournament, callback) {
+        const reader = new FileReader();
+        reader.addEventListener('load', () => callback(reader.result, tournament));
+        reader.readAsDataURL(img);
+    }
+
+    async function sendTournament(img, tournament){
+        const data =  {tournament,img}
         const cookies = new Cookies();
         const token = cookies.get('jwt');
-        const data = values;
         const json = await fetch(`${env.URL}/api/tournaments`, {
             method: 'POST',
             body: JSON.stringify(data),
@@ -79,6 +96,19 @@ const TournamentGestion = ({ user, addTournament, removeTournament, selectTourna
         addTournament(resp)
         setShowTournamentForm(false);
     }
+
+
+    const createTournament = async (values) => {
+        const isJpgOrPng = values.upload && values.upload.file.type === 'image/png';
+        if(values.upload && values.upload.fileList.length>1) return ErrorManager('Tiene que ser un archivo no más');
+        if(values.upload && !isJpgOrPng) return ErrorManager('Tiene que ser una imágen png');
+        if(values.upload) getBase64(values.upload.file.originFileObj, values.tournament, sendTournament);
+        sendTournament("", values.tournament);
+    }
+
+    const normFile = e => {
+        return e;
+      };
 
 
     return (
@@ -96,6 +126,17 @@ const TournamentGestion = ({ user, addTournament, removeTournament, selectTourna
                     </Form.Item>
                     <Form.Item name={['tournament', 'description']} label="Descripcion">
                         <Input.TextArea />
+                    </Form.Item>
+                    <Form.Item
+                        name={'tournament','upload'}
+                        label="Suba una foto que se usará como logo del torneo"
+                        getValueFromEvent={normFile}
+                    >
+                        <Upload name="logo" listType="picture">
+                        <Button>
+                            <UploadOutlined /> Click to upload
+                        </Button>
+                        </Upload>
                     </Form.Item>
                     <Form.Item>
                         <Button htmlType="submit" type="primary">Crear</Button>

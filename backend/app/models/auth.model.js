@@ -19,7 +19,10 @@ module.exports = {
 
 function createToken(user, headers){
     const tokenObject = {
-        user,
+        user:{
+            id: user.id,
+            username: user.username
+        },
         browserData: headers
     }
     const token = jwt.sign(tokenObject,privateKey,{expiresIn: 60*30})

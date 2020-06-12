@@ -25,9 +25,9 @@ function loginStrategy(){
         }, async (req, username, password, done) => {
             const { User } = req.app.locals.db;
             try{
-                let user = await User.findOne({where:{username}});
-                if(user===null){
-                    user = await User.findOne({where:{email:username}});
+                let user = await User.findOne({where:{username:username.toLowerCase()}});
+                if(!user){
+                    user = await User.findOne({where:{email:username.toLowerCase()}});
                     if(user===null) done(null,false,{msg:'Nombre de usuario erroneo'});
                 } 
                 const response = authModel.verifyPassword(password, user.password);

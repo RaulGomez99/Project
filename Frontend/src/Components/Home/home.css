@@ -9,7 +9,7 @@
     height: 80vh;
 }
 
-.home *{
+.home h1, .home p{
     color: white;
 }
 

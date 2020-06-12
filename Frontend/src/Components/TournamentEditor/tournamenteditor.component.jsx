@@ -8,10 +8,10 @@ import Tournament2Fase from './tournament2fase.component';
 
 
 
-const TournamentEditor = ({tournament}) => {
+const TournamentEditor = ({ tournament }) => {
     return(
         <div className="tournamentEditor">
-            {tournament.state === 0 ? <Tournament1Fase/> : tournament.state > 0 ? <Tournament2Fase/> : "fase 3"}
+            {tournament.state === 0 ? <Tournament1Fase/> : tournament.state > 0 ? <Tournament2Fase/> : "FINALIZADO"}
         </div>
     )
 }

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {connect} from 'react-redux';
 import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 import "./App.css";
@@ -10,16 +10,19 @@ import Register from "./Components/Register/register.component";
 import Header from './Components/Header/header.component';
 import TournamentGestion from './Components/TournamentGestion/tournamentgestion.component';
 import TournamentShow from "./Components/TournamentShow/tournamentshow.component";
+import TournamentParticipantShow from './Components/TournamentParticipantShow/tournamentgestion.component';
 
 import Cookies from 'universal-cookie';
 import {readUser, readTournament} from './Redux/Reducers/user.reducer'
 import {logUser} from './Redux/Actions/user.action';
+import { Spin } from "antd";
 
 const env = require('./env.json');
 
 const backgroundImage = require('./img/otherImg/background.jpg');
 
 const App = ({logUser,user, tournament}) => {
+  const [update, setUpdate] = useState(true)
 
   useEffect(()=>{
     const findUserCookie = async()=>{
@@ -36,6 +39,7 @@ const App = ({logUser,user, tournament}) => {
       if(json.user){
         logUser(json.user);
       }
+      setUpdate(false);
     }
     findUserCookie();
   },[logUser])
@@ -60,20 +64,35 @@ const App = ({logUser,user, tournament}) => {
   }
   
   return (
+    
     <div className="app">
-      <Header />
-      <div className="content" style={{backgroundImage:`url(${backgroundImage})`}}>
-        <Router>
-            <Switch>
-              <Route path="/tournaments">{reutrnIsPremiun(TournamentGestion)}</Route>
-              <Route exact path="/">{reutrnIsNotPremiun(Home)}</Route>
-              <Route path="/dashboard">{returnCorrectUrlContent(<h1>Dashboard</h1>)}</Route>
-              <Route path="/register">{returnCorrectUrlLogin(Register)}</Route>
-              <Route path="/login">{returnCorrectUrlLogin(Login)}</Route>
-              <Route path="/tournament/:id"><TournamentShow /></Route>
-            </Switch>
-        </Router>
-      </div>
+      {!update ? (
+        <div>
+          <Header />
+          <div className="content" style={{backgroundImage:`url(${backgroundImage})`}}>
+            <Router>
+                <Switch>
+                  <Route path="/tournaments">{returnCorrectUrlContent(TournamentGestion)}</Route>
+                  <Route exact path="/">{reutrnIsNotPremiun(Home)}</Route>
+                  <Route path="/tournamentsparticipant">{returnCorrectUrlContent(TournamentParticipantShow)}</Route>
+                  <Route path="/register">{returnCorrectUrlLogin(Register)}</Route>
+                  <Route path="/login">{returnCorrectUrlLogin(Login)}</Route>
+                  <Route path="/tournament/:id"><TournamentShow /></Route>
+                </Switch>
+            </Router>
+          </div>
+        </div>) : 
+        (<div>
+          <Header />
+          <div className="content" style={{backgroundImage:`url(${backgroundImage})`}}>
+            <Spin size="large" />
+          </div>
+        </div>)}
+        {/* <div style = {{color: "trasparent", background:"trasparent"}}> */}
+          <div id="imprimir" style={{overflow:"visible"}}> 
+
+          </div>
+        {/* </div> */}
     </div>
   );
 };

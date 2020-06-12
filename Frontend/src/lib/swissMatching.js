@@ -202,6 +202,31 @@ function getMappings(participants, matches) {
   }, [])
 }
 
+function getMappings2(participants, matches) {
+  return participants.reduce((acc, participant) => {
+    acc.push(matches.filter(match => {
+      return match.home.id === participant.id ||
+        match.away.id === participant.id
+    }).reduce((acc, match) => {
+      if (match.home.id === participant.id) {
+        acc.points += match.home.points
+        acc.opponents.push(match.away.id)
+      } else if (match.away.id === participant.id) {
+        acc.points += match.away.points
+        acc.opponents.push(match.home.id)
+      }
+      return acc
+    }, {
+      id: participant.id,
+      seed: participant.seed,
+      dropedOut: participant.dropedOut,
+      points: 0,
+      opponents: []
+    }))
+    return acc
+  }, [])
+}
+
 // Knuth shuffle from stack overflow
 function shuffle(array, seed, multiplier) {
   var currentIndex = array.length
@@ -249,5 +274,6 @@ module.exports = (options) => {
     getStandings: getStandings.bind(null, options),
     getMatchups: getMatchups.bind(null, options),
     getMappings: getMappings,
+    getMappings2
   }
 }

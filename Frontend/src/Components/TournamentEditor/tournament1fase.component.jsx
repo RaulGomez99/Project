@@ -17,7 +17,8 @@ const Tournament1Fase = ({tournament, editTournament, addTournament, selectTourn
         const token = cookies.get('jwt');
         const data = {participant : {
             id: values.participant.name,
-            seed: values.participant.seed
+            seed: values.participant.seed,
+            player: values.participant.player
         }}
         const json = await fetch(`${env.URL}/api/tournaments/addParticipant/${tournament.id}`, {
             method: 'POST',
@@ -55,6 +56,7 @@ const Tournament1Fase = ({tournament, editTournament, addTournament, selectTourn
     const columns = [
         {title: "Nombre", dataIndex: "id", key: "id"},
         {title: "Elo", dataIndex: "seed", key: "seed"},
+        {title: "Cuenta", dataIndex: "player", key: "player"},
         {
           title: "Action",
           key: "action",
@@ -84,7 +86,8 @@ const Tournament1Fase = ({tournament, editTournament, addTournament, selectTourn
     const sendFile = async (data, fileInfo) =>{
         const dataSend = data.map(participant => ({
             id: participant[0],
-            seed : participant[1]
+            seed : participant[1],
+            player: participant[2]
         }));
         console.log(dataSend)
         const cookies = new Cookies();
@@ -108,21 +111,24 @@ const Tournament1Fase = ({tournament, editTournament, addTournament, selectTourn
 
     return (
         <div className="fase1">
-            <h1>{tournament.name}</h1>
+            <h1 style={{textAlign:"center"}}>{tournament.name}</h1>
             <Form onFinish={sendParticipant}>
                 <Form.Item label="Nombre participante" name={['participant', 'name']} rules={[{required:true, message:'Name required'}]}>
                     <Input placeholder="Nombre"/>
                 </Form.Item>
-                <Form.Item label="Elo" name={['participant', 'seed']} rules={[{required:true, message:'Number required'}]}>
+                <Form.Item label="Elo" name={['participant', 'seed']}>
                     <Input placeholder="Elo"/>
+                </Form.Item>
+                <Form.Item label="Jugador" name={['participant', 'player']}>
+                    <Input placeholder="Jugador"/>
                 </Form.Item>
                 <Form.Item>
                     <Button htmlType='submit' type="primary">Añadir usuario</Button>
                 </Form.Item>
             </Form>
-            <CSVReader onFileLoaded={sendFile} />
-            <div className="participants">
-                <Table dataSource={tournament.participants} columns={columns} className="tablita"/>
+            <CSVReader onFileLoaded={sendFile} label="Importar participantes con CSV "/>
+            <div className="participants" style={{height: "50vh"}}>
+                <Table dataSource={tournament.participants} columns={columns} className="tablita" size="small"/>
             </div>
             <footer ><Button type="primary"onClick={startTournament}>Pasar a siguiente fase</Button></footer>
         </div>

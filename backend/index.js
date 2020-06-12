@@ -9,7 +9,7 @@ const app           = express();
 require('dotenv').config();
 
 (async function initApp(){
-    app.use(express.json());
+    app.use(express.json({limit:"1gb"}));
     app.use(cors());
     app.use(cookieParser());
 
@@ -53,6 +53,7 @@ function initDB(){
     //Import all the sequlize models
     db['User']       = sequelize['import']('./app/models/user.model.js');
     db['Tournament'] = sequelize['import']('./app/models/tournament.model.js');
+    db['Participant'] = sequelize['import']('./app/models/participant.model.js');
 
     // Do all the relations
     Object.keys(db).forEach(modelName => {

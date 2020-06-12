@@ -5,6 +5,7 @@ import { UserOutlined } from '@ant-design/icons';
 import Cookies from 'universal-cookie';
 import { connect } from 'react-redux';
 import { logUser } from '../../Redux/Actions/user.action';
+import ErrorManager from '../../errorManager';
 
 const env = require('../../env.json');
 
@@ -23,7 +24,7 @@ const Login =  ({ logUser }) => {
             },
         });
         const resp = await json.json();
-        if(resp.msg) alert(resp.msg);
+        if(resp.msg) return ErrorManager(resp.msg);
         else {
             const cookies = new Cookies();
             cookies.set('jwt', resp.token, { path: '/' });

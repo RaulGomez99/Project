@@ -3,15 +3,13 @@ module.exports = {
 }
 
 async function editUser(req, res){
+    console.log("Dentro")
+    if(!req.user) return res.status(401).send({msg:"Error not user loged"});
     const { User } = req.app.locals.db;
     const { id } = req.params;
-    const { oldUser } = req.body;
-    const newUser = await User.findByPk(id);
-    newUser.name = oldUser.name;
-    newUser.last_name = oldUser.last_name;
-    newUser.password  = oldUser.password;
-    newUser.logo  = oldUser.logo;
-    newUser.ispremiun  = oldUser.ispremiun;
-    await newUser.save();
-    res.send(newUser);
+    const { img } = req.body;
+    const user = await User.findByPk(id);
+    user.logo= img;
+    await user.save();
+    res.send(user);
 }

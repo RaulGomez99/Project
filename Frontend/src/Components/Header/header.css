@@ -1,6 +1,6 @@
 header {
     display: block;
-    height: 50px;
+    height: 80px;
     position: fixed;
     top: 0;
     width: 100%;
@@ -8,24 +8,44 @@ header {
     margin: 0;
     padding: 0;
     /* overflow: auto; */
-    background-color: #333;
+    background-color: rgba(255, 255, 255, 0.95);
     z-index: 1;
   }
-  ul{
-    display: inline;
+  .navChess{
+    display: flex;
+    justify-content: start;
   }
+
+  .navChess div{
+    margin: 10px;
+  }
+
+header .title{
+  width: 100%;
+  text-align: center;
+}
+
   li {
     float: left;
   }
   
   li a {
     display: block;
-    color: white;
+    color: #333;
     text-align: center;
     padding: 14px 16px;
     text-decoration: none;
   }
+
+  .icono{
+    width: 40px;
+    height: 35px;
+
+  }
   
+  .modalNav .ant-modal-footer{
+    display: none;
+  }
 
   li a:hover {
     background-color: #111;
@@ -33,6 +53,14 @@ header {
 
   .right{
     float: right;
+  }
+
+  .left{
+    float: left;
+  }
+
+  p.logout:hover{
+    background-color: lightgray;
   }
 
   /* .mobile li[role="menuitem"]:hover{

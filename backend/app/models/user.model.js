@@ -14,7 +14,7 @@ module.exports = (sequelize, Datatypes) => {
         logo:Datatypes.STRING
     },{timestamps:false});
     User.associate = models => {
-        User.hasMany(models.Tournament, {foreignKey:'creator'})
+        User.hasMany(models.Tournament, {foreignKey:'creator'});
     }
     return User;
 }

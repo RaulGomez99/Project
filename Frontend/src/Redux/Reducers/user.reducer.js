@@ -26,6 +26,7 @@ const reducer = (state = initalState, action) => {
             return  initalState;
         
         case 'ADD_TOURNAMENT':
+            console.log(state.user.tournaments.concat(action.tournament))
             return {
                 ...state,
                 user:{
