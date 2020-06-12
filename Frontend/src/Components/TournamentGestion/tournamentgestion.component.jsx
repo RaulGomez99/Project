@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import { Table, Tag, Button, Card, Modal, Input, Form, Upload, Avatar } from "antd";
+import { Table, Tag, Button, Card, Modal, Input, Form, Upload, Avatar, Checkbox } from "antd";
 import { DeleteOutlined, EditOutlined, UserAddOutlined, EyeOutlined, FilePdfOutlined, UploadOutlined } from "@ant-design/icons";
 
 import { connect } from 'react-redux';
@@ -19,6 +19,8 @@ const defaultImg = require('./default.png');
 
 const TournamentGestion = ({ user, addTournament, removeTournament, selectTournament, tournament }) => {
     const [showTournamentForm, setShowTournamentForm] = useState(false);
+    const [confirm, setConfirm] = useState(false);
+    const [values, setValues] = useState(false);
 
     useEffect(()=>{
         if(!user.ispremiun) selectTournament(user.tournaments[0].id);
@@ -97,8 +99,25 @@ const TournamentGestion = ({ user, addTournament, removeTournament, selectTourna
         setShowTournamentForm(false);
     }
 
+    const createTournamentConfirm = (values)=>{
+        setValues(values);
+        const cookies = new Cookies();
+        if(cookies.get('step1')){
+            createTournament();
+        }else{
+            setConfirm(true);
+        }
+    }
 
-    const createTournament = async (values) => {
+    const sendConfirmining = () => {
+        const cookies = new Cookies();
+        if(document.querySelector('.ant-checkbox-input').checked) cookies.set('step1', true);
+        setConfirm(false);
+        createTournament();
+    }
+
+
+    const createTournament = async () => {
         const isJpgOrPng = values.upload && values.upload.file.type === 'image/png';
         if(values.upload && values.upload.fileList.length>1) return ErrorManager('Tiene que ser un archivo no más');
         if(values.upload && !isJpgOrPng) return ErrorManager('Tiene que ser una imágen png');
@@ -120,7 +139,7 @@ const TournamentGestion = ({ user, addTournament, removeTournament, selectTourna
             <Table className="table" columns={columns} dataSource={user.tournaments} size="small" />
 
             <Modal className="addTournament" title="Añadir torneo" visible={showTournamentForm} onCancel={()=>setShowTournamentForm(false)} onOk={()=>setShowTournamentForm(false)}>
-                <Form onFinish={createTournament}>
+                <Form onFinish={createTournamentConfirm}>
                     <Form.Item name={['tournament', 'name']} label="Nombre" rules={[{ required: true, message:"Name is required"}]}>
                         <Input placeholder="Nombre del torneo" />
                     </Form.Item>
@@ -142,8 +161,12 @@ const TournamentGestion = ({ user, addTournament, removeTournament, selectTourna
                         <Button htmlType="submit" type="primary">Crear</Button>
                     </Form.Item>
                 </Form>
+            </Modal>
+            <Modal className="donfirmStep0" title="Añadir torneo" visible={confirm} onCancel={()=>setConfirm(false)} onOk={()=>setConfirm(false)}>
+                <p>Si le das a aceptar no podrás volver a atras.</p>
+                <p>No volver a mostrar este cartel <Checkbox className="confirmStep1"/></p>
+                <Button type="primary" onClick={sendConfirmining}>Confirmar</Button>
             </Modal> </div>}
-            <div id="print"></div>
         </Card>
     )
 }

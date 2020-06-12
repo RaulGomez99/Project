@@ -31,6 +31,10 @@
     display: none
 }
 
+.ant-modal-footer{
+    display: none;
+}
+
 @media  (max-width: 768px) {
     .tournamentGestion{
         height: 87vh;

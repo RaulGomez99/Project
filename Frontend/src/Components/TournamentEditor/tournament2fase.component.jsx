@@ -1,12 +1,11 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import { connect } from 'react-redux';
 import { readUser, readTournament } from '../../Redux/Reducers/user.reducer'
 import { addTournament, removeTournament, selectTournament, editTournament } from '../../Redux/Actions/user.action'
 import './tournamenteditor.css'
 import TournamentMatch from './tournamentmatch.component';
 import { ArrowLeftOutlined, FilePdfOutlined }  from "@ant-design/icons"
-import { Button, Table, Tooltip } from 'antd';
-import ReactStopwatch from 'react-stopwatch';
+import { Button, Table, Tooltip, Modal, Checkbox } from 'antd';
 
 import Cookies from 'universal-cookie';
 
@@ -37,6 +36,8 @@ const sortAlgorithm = (a, b) => {
 }
 
 const Tournament2Fase = ({tournament, selectTournament, editTournament }) => {  
+    const [confirm, setConfirm] = useState(false);
+    const [confirm2, setConfirm2] = useState(false);
     
     useEffect(() => {
         const interval = setInterval(() => {
@@ -86,6 +87,38 @@ const Tournament2Fase = ({tournament, selectTournament, editTournament }) => {
         editTournament(resp.id, resp);
         setTimeout(()=>selectTournament(null),199) 
         setTimeout(()=>selectTournament(resp.id),200) 
+    }
+
+    const changeRoundConfirm = () => {
+        const cookies = new Cookies();
+        if(cookies.get('step3')){
+            changeRound();
+        }else{
+            setConfirm(true);
+        }
+    }
+    
+    const sendConfirmining = () => {
+        const cookies = new Cookies();
+        if(document.querySelector('.ant-checkbox-input').checked) cookies.set('step3', true);
+        setConfirm(false);
+        changeRound();
+    }
+
+    const deshacerConfirm = () => {
+        const cookies = new Cookies();
+        if(cookies.get('undo')){
+            deshacer();
+        }else{
+            setConfirm(true);
+        }
+    }
+
+    const sendConfirmining2 = () => {
+        const cookies = new Cookies();
+        if(document.querySelector('.ant-checkbox-input').checked) cookies.set('undo', true);
+        setConfirm2(false);
+        deshacer();
     }
 
     const deshacer = async () => {
@@ -152,9 +185,19 @@ const Tournament2Fase = ({tournament, selectTournament, editTournament }) => {
                 }): ""}
             </div>
             <footer >
-                <Button type="primary"onClick={changeRound}>Pasar a siguiente fase</Button>
-                <Button type="danger"onClick={deshacer}>Deshacer ronda</Button>
+                <Button type="primary"onClick={changeRoundConfirm}>Pasar a siguiente fase</Button>
+                <Button type="danger"onClick={deshacerConfirm}>Deshacer ronda</Button>
             </footer>
+            <Modal className="donfirmStep0" title="Añadir torneo" visible={confirm} onCancel={()=>setConfirm(false)} onOk={()=>setConfirm(false)}>
+                <p>Si le das a aceptar no podrás volver a atras.</p>
+                <p>No volver a mostrar este cartel <Checkbox className="confirmStep2"/></p>
+                <Button type="primary" onClick={sendConfirmining}>Confirmar</Button>
+            </Modal>
+            <Modal className="donfirmStep1" title="Añadir torneo" visible={confirm2} onCancel={()=>setConfirm2(false)} onOk={()=>setConfirm2(false)}>
+                <p>Si le das a aceptar no podrás volver a atras.</p>
+                <p>No volver a mostrar este cartel <Checkbox className="confirmStep2"/></p>
+                <Button type="primary" onClick={sendConfirmining2}>Confirmar</Button>
+            </Modal>
         </div>
     )
 }

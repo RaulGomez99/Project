@@ -16,7 +16,7 @@
 
 .tournamentShow .matches{
     display: grid;
-     width: 98%; 
+    width: 98%; 
     grid-template-columns: repeat(3, 1fr);
     grid-gap: 20px;
 }

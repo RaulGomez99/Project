@@ -1,6 +1,6 @@
 import CSVReader from 'react-csv-reader'
-import React from 'react';
-import { Input, Form, Button, Table } from 'antd';
+import React, {useState} from 'react';
+import { Input, Form, Button, Table, Checkbox, Modal } from 'antd';
 import { connect } from 'react-redux';
 import { readUser, readTournament } from '../../Redux/Reducers/user.reducer'
 import { addTournament, removeTournament, selectTournament, editTournament } from '../../Redux/Actions/user.action'
@@ -12,6 +12,8 @@ const env = require('../../env.json');
 
 
 const Tournament1Fase = ({tournament, editTournament, addTournament, selectTournament }) => {
+    const [confirm, setConfirm] = useState(false);
+
     const sendParticipant = async (values) => {
         const cookies = new Cookies();
         const token = cookies.get('jwt');
@@ -66,7 +68,27 @@ const Tournament1Fase = ({tournament, editTournament, addTournament, selectTourn
         }
     ]
 
+    const startTournamentConfirm = () => {
+        const cookies = new Cookies();
+        if(cookies.get('step2')){
+            startTournament();
+        }else{
+            setConfirm(true);
+        }
+    }
+
+    const sendConfirmining = () => {
+        const cookies = new Cookies();
+        console.log("asd");
+        if(document.querySelector('.ant-checkbox-input').checked) cookies.set('step2', true);
+        console.log("bsd");
+        setConfirm(false);
+        console.log("csd");
+        startTournament();
+    }
+
     const startTournament = async () => {
+        console.log("asd");
         const cookies = new Cookies();
         const token = cookies.get('jwt');
         const json = await fetch(`${env.URL}/api/tournaments/startTournament/${tournament.id}`, {
@@ -130,7 +152,12 @@ const Tournament1Fase = ({tournament, editTournament, addTournament, selectTourn
             <div className="participants" style={{height: "50vh"}}>
                 <Table dataSource={tournament.participants} columns={columns} className="tablita" size="small"/>
             </div>
-            <footer ><Button type="primary"onClick={startTournament}>Pasar a siguiente fase</Button></footer>
+            <footer ><Button type="primary"onClick={startTournamentConfirm}>Pasar a siguiente fase</Button></footer>
+            <Modal className="donfirmStep0" title="Añadir torneo" visible={confirm} onCancel={()=>setConfirm(false)} onOk={()=>setConfirm(false)}>
+                <p>Si le das a aceptar no podrás volver a atras.</p>
+                <p>No volver a mostrar este cartel <Checkbox className="confirmStep2"/></p>
+                <Button type="primary" onClick={sendConfirmining}>Confirmar</Button>
+            </Modal>
         </div>
     )
 }
