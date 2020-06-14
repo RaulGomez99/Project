@@ -103,7 +103,8 @@ const TournamentGestion = ({ user, addTournament, removeTournament, selectTourna
         setValues(values);
         const cookies = new Cookies();
         if(cookies.get('step1')){
-            createTournament();
+            console.log("asd")
+            createTournament(values);
         }else{
             setConfirm(true);
         }
@@ -112,16 +113,17 @@ const TournamentGestion = ({ user, addTournament, removeTournament, selectTourna
     const sendConfirmining = () => {
         const cookies = new Cookies();
         if(document.querySelector('.ant-checkbox-input').checked) cookies.set('step1', true);
+        createTournament(values);
+        console.log("bsd")
         setConfirm(false);
-        createTournament();
     }
 
 
-    const createTournament = async () => {
+    const createTournament = async (values) => {
         const isJpgOrPng = values.upload && values.upload.file.type === 'image/png';
         if(values.upload && values.upload.fileList.length>1) return ErrorManager('Tiene que ser un archivo no más');
         if(values.upload && !isJpgOrPng) return ErrorManager('Tiene que ser una imágen png');
-        if(values.upload) getBase64(values.upload.file.originFileObj, values.tournament, sendTournament);
+        if(values.upload) return getBase64(values.upload.file.originFileObj, values.tournament, sendTournament);
         sendTournament("", values.tournament);
     }
 

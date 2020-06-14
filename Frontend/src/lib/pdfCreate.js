@@ -18,6 +18,9 @@ function generatePDF(input){
 function generateTournamentPDF(tournament){
     document.querySelector('#imprimir').innerHTML="";
     const div = document.createElement('div');
+    div.style.width= "50%";
+    const div2 = document.createElement('div');
+    div2.style.textAlign = "center";
     const h1  = document.createElement('h1');
     h1.style.marginLeft = "12px"
     const  blancas = require('./blancas.png')
@@ -31,13 +34,15 @@ function generateTournamentPDF(tournament){
     imgTitle.style.display = "inline";  
     imgTitle.style.marginLeft = "24px"; 
     const h1_2  = document.createElement('h1');
-    h1_2.innerText="Ronda: "+tournament.state;
+    h1_2.innerText=tournament.state>0 ? "Ronda: "+tournament.state : "Finalizado";
     h1_2.style.marginLeft = "24px"; 
     h1_2.style.display = "inline";  
 
-    div.appendChild(h1);
-    div.appendChild(imgTitle);
-    div.appendChild(h1_2);
+    div2.appendChild(h1);
+    div2.appendChild(imgTitle);
+    div2.appendChild(h1_2);
+    div.appendChild(div2);
+    div.appendChild(document.createElement('hr'));
     if(tournament.state>0){
         tournament.participants.sort((a,b)=>{
             if(a.id.toLowerCase()>b.id.toLowerCase()) return 1;
@@ -59,6 +64,7 @@ function generateTournamentPDF(tournament){
         generatePDF(document.querySelector('#imprimir'));
     }else{
         const table = document.createElement('table');
+        table.style.marginLeft = "12px";
         const firstTr = document.createElement('tr');
         const firstTd = document.createElement('th');
         firstTd.innerText="Nombre"
