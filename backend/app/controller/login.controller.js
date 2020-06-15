@@ -15,8 +15,8 @@ function logIn(req,res,next) {
     const { User, Tournament, Participant } = req.app.locals.db;
     passport.authenticate('login', async (err, authUser,info) => {
         if(err) return res.send({msg:err})
-        if(info!==undefined){
-            res.send({msg:info});
+        if(info){
+            res.send({msg:info.msg});
         }else{
             req.logIn(authUser, async error=>{
                 if(error) return res.send({ msg:error });

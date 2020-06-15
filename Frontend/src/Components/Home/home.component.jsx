@@ -1,5 +1,6 @@
 import React from 'react';
 import "./home.css"
+import { BrowserRouter as Router} from 'react-router-dom';
 
 import { connect } from 'react-redux';
 import ErrorManager from '../../errorManager';
@@ -45,7 +46,8 @@ const Home =  ({ user, addTournament, selectTournament, tournament }) => {
         addTournament(resp);
         window.location.reload(false);
       }else{
-        setTimeout(()=>selectTournament(user.tournaments[0].id),200) 
+        if(user.tournaments[0].state<0) {window.location.href="/tournament/"+user.tournaments[0].id}
+        else setTimeout(()=>selectTournament(user.tournaments[0].id),200) 
       }
   }
 

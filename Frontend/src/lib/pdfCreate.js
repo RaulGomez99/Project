@@ -5,17 +5,22 @@ module.exports = {
     generateTournamentPDF
 }
 
-function generatePDF(input){
+function generatePDF(input, pdf, tournament){
     html2canvas(input).then((canvas) => {
         const imgData = canvas.toDataURL();
-        const pdf = new jsPDF();
+        console.log(imgData);
         pdf.addImage(imgData, 'PNG', 0, 0, 0);
-        pdf.save("download.pdf");  
-        input.style.display="none";
+        if(tournament.participants.length>35){
+            pdf.addPage();
+            generateTournamentPDF({...tournament, participants:tournament.participants.slice(36,tournament.participants.length-1)},pdf);
+        }else{
+            pdf.save("download.pdf");  
+            input.style.display="none";
+        }
     });
 };
 
-function generateTournamentPDF(tournament){
+function generateTournamentPDF(tournament, pdf = new jsPDF()){
     document.querySelector('#imprimir').innerHTML="";
     const div = document.createElement('div');
     div.style.width= "50%";
@@ -47,10 +52,10 @@ function generateTournamentPDF(tournament){
         tournament.participants.sort((a,b)=>{
             if(a.id.toLowerCase()>b.id.toLowerCase()) return 1;
             else return -1;
-        }).forEach(participant => {
+        }).slice(0,35).forEach(participant => {
             const h4 = document.createElement('h4');
             const match = tournament.matches.filter(match => match.round===tournament.state && (match.home.id == participant.id || match.away.id === participant.id))[0];
-    
+
             h4.innerText=participant.id.toUpperCase()+" Mesa "+match.table+" ";
             const img = document.createElement('img');
             img.src= (match.home.id == participant.id) ? blancas : negras;
@@ -61,7 +66,7 @@ function generateTournamentPDF(tournament){
         })
         document.querySelector('#imprimir').appendChild(div);
         document.querySelector('#imprimir').style.display="block"
-        generatePDF(document.querySelector('#imprimir'));
+      //  generatePDF(document.querySelector('#imprimir'));
     }else{
         const table = document.createElement('table');
         table.style.marginLeft = "12px";
@@ -93,8 +98,7 @@ function generateTournamentPDF(tournament){
             table.appendChild(tr);
         })
         div.appendChild(table);
-        console.log(div);
         document.querySelector('#imprimir').appendChild(div);
-        generatePDF(document.querySelector('#imprimir'));
     }
+    generatePDF(document.querySelector('#imprimir'), pdf, tournament);
 }

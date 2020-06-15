@@ -43,7 +43,7 @@ const TournamentGestion = ({ user}) => {
     return (
         <Card className="tournamentGestion">
             <h1>Ver torneos</h1>
-            <Table className="table" columns={columns} dataSource={user.tournamentParticipant.filter(tournament=>tournament.state>0)} size="small" />
+            <Table className="table" columns={columns} dataSource={user.tournamentParticipant.filter(tournament=>tournament.state!=0)} size="small" />
         </Card>
     )
 }

@@ -110,7 +110,7 @@ const Tournament2Fase = ({tournament, selectTournament, editTournament }) => {
         if(cookies.get('undo')){
             deshacer();
         }else{
-            setConfirm(true);
+            setConfirm2(true);
         }
     }
 
