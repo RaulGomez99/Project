@@ -91,8 +91,12 @@ function generateTournamentPDF(tournament, pdf = new jsPDF()){
             for (let i = 1; i <= Math.ceil(Math.log2(tournament.participants.length)); i++) {
                 const tdIntenr = document.createElement('td');
                 const match = tournament.matches.filter(match => match.round==i && (match.home.id === participant.id || match.away.id === participant.id))[0];
-                if(match.home.id === participant.id) tdIntenr.innerText = match.home.points;
-                else tdIntenr.innerText = match.away.points;
+                if(match){
+                    if(match.home.id === participant.id) tdIntenr.innerText = match.home.points;
+                    else tdIntenr.innerText = match.away.points;
+                }else{
+                    tdIntenr.innerText= "";
+                }
                 tr.appendChild(tdIntenr);
             }
             table.appendChild(tr);
