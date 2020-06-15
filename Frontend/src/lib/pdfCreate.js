@@ -8,7 +8,6 @@ module.exports = {
 function generatePDF(input, pdf, tournament){
     html2canvas(input).then((canvas) => {
         const imgData = canvas.toDataURL();
-        console.log(imgData);
         pdf.addImage(imgData, 'PNG', 0, 0, 0);
         if(tournament.participants.length>35){
             pdf.addPage();
@@ -49,20 +48,22 @@ function generateTournamentPDF(tournament, pdf = new jsPDF()){
     div.appendChild(div2);
     div.appendChild(document.createElement('hr'));
     if(tournament.state>0){
-        tournament.participants.sort((a,b)=>{
+        tournament.participants.filter(participant=>!participant.dropedOut).sort((a,b)=>{
             if(a.id.toLowerCase()>b.id.toLowerCase()) return 1;
             else return -1;
         }).slice(0,35).forEach(participant => {
             const h4 = document.createElement('h4');
             const match = tournament.matches.filter(match => match.round===tournament.state && (match.home.id == participant.id || match.away.id === participant.id))[0];
-
-            h4.innerText=participant.id.toUpperCase()+" Mesa "+match.table+" ";
-            const img = document.createElement('img');
-            img.src= (match.home.id == participant.id) ? blancas : negras;
-            img.style.width = "12px";
-            h4.style.marginLeft = "12px"
-            h4.appendChild(img);
-            div.appendChild(h4);
+            console.log(participant, match);
+            if(match){
+                h4.innerText=participant.id.toUpperCase()+" Mesa "+match.table+" ";
+                const img = document.createElement('img');
+                img.src= (match.home.id == participant.id) ? blancas : negras;
+                img.style.width = "12px";
+                h4.style.marginLeft = "12px"
+                h4.appendChild(img);
+                div.appendChild(h4);
+            }
         })
         document.querySelector('#imprimir').appendChild(div);
         document.querySelector('#imprimir').style.display="block"
